@@ -1,5 +1,6 @@
 package com.simbirsoft.tests;
 
+import com.simbirsoft.helpers.ParameterProvider;
 import com.simbirsoft.pages.HomePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -13,7 +14,7 @@ import org.testng.annotations.Test;
  * <p>
  * Тестовый класс для главной страницы сайта Way2Automation
  * <p>
- * Copyright (c) 2024 Way2Automation
+ * Copyright (c) 2026 Way2Automation. All Rights Reserved.
  * <p>
  * Author: Sheimukhov Andrei
  * <p>
@@ -25,6 +26,7 @@ public class HomePageTests extends BaseTest {
     @BeforeMethod
     public void initPage() {
         homePage = new HomePage(driver, waiter);
+        driver.get(ParameterProvider.get("base.url"));
     }
 
     @Test(description = "1.1. Проверка открытия страницы и отображения основных элементов")
