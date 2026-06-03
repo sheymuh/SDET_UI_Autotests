@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
  * <p>
  * Компонент футера главной страницы сайта Way2Automation
  * <p>
- * Copyright (c) 2024 Way2Automation
+ * Copyright (c) 2026 Way2Automation. All Rights Reserved.
  * <p>
  * Author: Sheimukhov Andrei
  * <p>
- * Date: 28.05.2024
+ * Date: 28.05.2026
  */
 public class FooterComponent extends BasePage {
     @FindBy(className = "elementor-location-footer")

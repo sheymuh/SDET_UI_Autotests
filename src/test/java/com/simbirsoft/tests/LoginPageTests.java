@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
  * <p>
  * Author: Sheimukhov Andrei
  * <p>
- * Date: 28.05.2024
+ * Date: 28.05.2026
  */
 public class LoginPageTests extends BaseTest {
     private final String LOGIN_PAGE_URL = ParameterProvider.get("base.url") + "angularjs-protractor/registeration/#/login";

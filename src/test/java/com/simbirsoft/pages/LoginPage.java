@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * <p>
  * Author: Sheimukhov Andrei
  * <p>
- * Date: 28.05.2024
+ * Date: 28.05.2026
  */
 public class LoginPage extends BasePage {
     @FindBy(id = "username")

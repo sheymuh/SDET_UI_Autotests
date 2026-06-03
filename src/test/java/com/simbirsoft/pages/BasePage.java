@@ -10,11 +10,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * <p>
  * Базовый класс Page Object
  * <p>
- * Copyright (c) 2024 Way2Automation
+ * Copyright (c) 2026 Way2Automation. All Rights Reserved.
  * <p>
  * Author: Sheimukhov Andrei
  * <p>
- * Date: 28.05.2024
+ * Date: 28.05.2026
  */
 public abstract class BasePage {
     protected WebDriver driver;

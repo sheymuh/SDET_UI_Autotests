@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
  * <p>
  * Компонент хедера главной страницы сайта Way2Automation
  * <p>
- * Copyright (c) 2024 Way2Automation
+ * Copyright (c) 2026 Way2Automation. All Rights Reserved.
  * <p>
  * Author: Sheimukhov Andrei
  * <p>
- * Date: 28.05.2024
+ * Date: 28.05.2026
  */
 public class HeaderComponent extends BasePage {
     // Блок всех контактов в верхней панели
@@ -34,7 +34,7 @@ public class HeaderComponent extends BasePage {
     private List<WebElement> indianPhoneNums;
 
     // Телефон США
-    @FindBy(css = "a[href*='tel:+16464800603']")
+    @FindBy(css = ".elementor-inline-item a[href*='tel:']")
     private WebElement usaPhoneNum;
 
     @FindBy(css = "a[href*='skype:']")

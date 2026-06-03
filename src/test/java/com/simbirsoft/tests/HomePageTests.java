@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
  * <p>
  * Author: Sheimukhov Andrei
  * <p>
- * Date: 28.05.2024
+ * Date: 28.05.2026
  */
 public class HomePageTests extends BaseTest {
     private HomePage homePage;

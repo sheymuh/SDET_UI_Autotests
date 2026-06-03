@@ -21,7 +21,7 @@ import java.util.Map;
  * <p>
  * Author: Sheimukhov Andrei
  * <p>
- * Date: 28.05.2024
+ * Date: 28.05.2026
  */
 public abstract class BaseTest {
     protected WebDriver driver;
