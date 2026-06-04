@@ -1,13 +1,16 @@
 package com.simbirsoft.tests;
 
 import com.simbirsoft.helpers.ParameterProvider;
+import com.simbirsoft.helpers.StringHelper;
+import com.simbirsoft.helpers.TransactionsHelper;
 import com.simbirsoft.pages.*;
-import org.openqa.selenium.Alert;
+import org.openqa.selenium.*;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -27,6 +30,7 @@ public class BankingAppPageTests extends BaseTest {
     private final String CUSTOMER_LNAME = "важный";
     private final String CUSTOMER_POST_CODE = "12345";
     private final String DEPOSIT_AMOUNT = "100321";
+    private final String ACCOUNT_CURRENCY = "Rupee";
 
     private BankingAppPage bankingAppPage;
     private BankManagerLoginPage bankManagerLoginPage;
@@ -45,7 +49,7 @@ public class BankingAppPageTests extends BaseTest {
         bankManagerLoginPage.addCustomer(CUSTOMER_FNAME, CUSTOMER_LNAME, CUSTOMER_POST_CODE);
         driver.switchTo().alert().accept();
 
-        bankManagerLoginPage.openAccount(CUSTOMER_FNAME, CUSTOMER_LNAME, "Rupee");
+        bankManagerLoginPage.openAccount(CUSTOMER_FNAME, CUSTOMER_LNAME, ACCOUNT_CURRENCY);
         driver.switchTo().alert().accept();
 
         bankingAppPage.clickHomeButton();
@@ -58,9 +62,13 @@ public class BankingAppPageTests extends BaseTest {
     public void testSampleFormSuccessfulRegisterGetsSuccessMessage() {
         SampleFormPage sampleFormPage = bankingAppPage.clickSampleFormButton();
 
+        List<String> hobbiesTexts = sampleFormPage.getHobbiesTexts();
+        String longestHobby = StringHelper.findLongestWord(hobbiesTexts);
+
+        String aboutYourself = "Самое длинное слово из предложенных хобби - " + longestHobby;
+
         ArrayList<String> hobbies = new ArrayList<>();
         hobbies.add("sports");
-        String aboutYourself = "Самое длинное слово из предложенных хобби - " + sampleFormPage.findLongestHobbyWord();
 
         sampleFormPage.register("Успех", "Успешный", "uspeh@gmail.com",
                 "1234", hobbies, "Male", aboutYourself);
@@ -68,8 +76,8 @@ public class BankingAppPageTests extends BaseTest {
         Assert.assertTrue(sampleFormPage.getRegisterSuccessMessage().isDisplayed(),
                 "Сообщение об успешной авторизации не отображается");
         Assert.assertEquals(sampleFormPage.getRegisterSuccessMessage().getText(),
-                "User registered successfully!", "Сообщение об успешной авторизации не корректно");
-        Assert.assertEquals(sampleFormPage.findLongestHobbyWord(), "Traveling",
+                SampleFormPage.REGISTER_SUCCESS_TEXT, "Сообщение об успешной авторизации не корректно");
+        Assert.assertEquals(longestHobby, SampleFormPage.LONGEST_HOBBY_WORD,
                 "Неправильно высчитанно самое длинное слово в хобби");
     }
 
@@ -81,7 +89,7 @@ public class BankingAppPageTests extends BaseTest {
 
         Alert alert = driver.switchTo().alert();
 
-        Assert.assertTrue(alert.getText().contains("Customer added successfully with customer id :"),
+        Assert.assertTrue(alert.getText().contains(BankManagerLoginPage.ADD_CUSTOMER_SUCCESS_MESSAGE),
                 "Сообщение об успешной авторизации не отображается или не корректно");
     }
 
@@ -92,10 +100,10 @@ public class BankingAppPageTests extends BaseTest {
         bankManagerLoginPage.addCustomer(CUSTOMER_FNAME, CUSTOMER_LNAME, CUSTOMER_POST_CODE);
         driver.switchTo().alert().accept();
 
-        bankManagerLoginPage.openAccount(CUSTOMER_FNAME, CUSTOMER_LNAME, "Rupee");
+        bankManagerLoginPage.openAccount(CUSTOMER_FNAME, CUSTOMER_LNAME, ACCOUNT_CURRENCY);
 
         Alert alert = driver.switchTo().alert();
-        Assert.assertTrue(alert.getText().contains("Account created successfully with account Number :"),
+        Assert.assertTrue(alert.getText().contains(BankManagerLoginPage.OPEN_ACCOUNT_SUCCESS_MESSAGE),
                 "Сообщение об успешном открытии аккаунта не отображается или не корректно");
     }
 
@@ -109,7 +117,9 @@ public class BankingAppPageTests extends BaseTest {
     @Test(groups = {"needLoginCustomer"}, description = "5.3.1. Проверка успешного пополнения счёта и обновления транзакций")
     public void testSuccessfulDepositWithTransactionsUpdate() {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
-        Assert.assertEquals(customerLoginPage.getTransactionMessageText(), "Deposit Successful", "Пополнение счёта не удалось или сообщение некорректно");
+        Assert.assertEquals(customerLoginPage.getTransactionMessageText(), CustomerLoginPage.DEPOSIT_SUCCESS_MESSAGE, "Пополнение счёта не удалось или сообщение некорректно");
+
+        Assert.assertTrue(customerLoginPage.waitingForTransactionUpdateWithRetries(3));
 
         customerLoginPage.clickTransactionsFormButton();
         Assert.assertTrue(customerLoginPage.findTransactionAmount(DEPOSIT_AMOUNT), "Транзакции не обновились после пополнения счёта");
@@ -129,14 +139,17 @@ public class BankingAppPageTests extends BaseTest {
     public void testSuccessfulWithdrawWithTransactionsUpdate() {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
 
-        int balance = Integer.parseInt(customerLoginPage.getBalanceAmount());
+        int balance = customerLoginPage.getBalanceAmount();
         Random random = new Random();
         String amount = String.valueOf(random.nextInt(balance));
 
         customerLoginPage.withdraw(amount);
-        Assert.assertEquals(customerLoginPage.getTransactionMessageText(), "Transaction successful", "Снятие средств со счёта не удалось или сообщение некорректно");
+        Assert.assertEquals(customerLoginPage.getTransactionMessageText(), CustomerLoginPage.WITHDRAW_SUCCESS_MESSAGE, "Снятие средств со счёта не удалось или сообщение некорректно");
+
+        Assert.assertTrue(customerLoginPage.waitingForTransactionUpdateWithRetries(3));
 
         customerLoginPage.clickTransactionsFormButton();
+
         Assert.assertTrue(customerLoginPage.findTransactionAmount(amount), "Транзакции не обновились после снятия средств со счёта");
     }
 
@@ -145,7 +158,7 @@ public class BankingAppPageTests extends BaseTest {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
         String amount = "1000000";
         customerLoginPage.withdraw(amount);
-        Assert.assertEquals(customerLoginPage.getTransactionMessageText(), "Transaction Failed. You can not withdraw amount more than the balance.", "Нельзя снять со счёта больше, чем есть на балансе или сообщение некорректно");
+        Assert.assertEquals(customerLoginPage.getTransactionMessageText(), CustomerLoginPage.WITHDRAW_FAILURE_MESSAGE, "Нельзя снять со счёта больше, чем есть на балансе или сообщение некорректно");
 
         customerLoginPage.clickTransactionsFormButton();
         Assert.assertFalse(customerLoginPage.findTransactionAmount(amount), "Транзакции не обновились после снятия средств со счёта");
@@ -158,10 +171,17 @@ public class BankingAppPageTests extends BaseTest {
 
         customerLoginPage.withdraw("250");
 
-        int balance = Integer.parseInt(customerLoginPage.getBalanceAmount());
+        int balance = customerLoginPage.getBalanceAmount();
+
+        Assert.assertTrue(customerLoginPage.waitingForTransactionUpdateWithRetries(3));
 
         customerLoginPage.clickTransactionsFormButton();
-        int calculatedBalance = customerLoginPage.calculateBalanceFromTransactionsTable();
+
+        int calculatedBalance = TransactionsHelper.calculateBalance(
+                customerLoginPage.getTransactionsAmounts(),
+                customerLoginPage.getTransactionsTypes()
+        );
+
         Assert.assertEquals(balance, calculatedBalance, "Баланс вычисленный из таблицы транзакций не равен балансу из страницы аккаунта");
     }
 
@@ -169,12 +189,12 @@ public class BankingAppPageTests extends BaseTest {
     public void testWithdrawAllBalanceWithTransactionsUpdate() {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
 
-        String balance = customerLoginPage.getBalanceAmount();
+        String balance = String.valueOf(customerLoginPage.getBalanceAmount());
 
         customerLoginPage.withdraw(balance);
 
-        Assert.assertEquals(customerLoginPage.getTransactionMessageText(), "Transaction successful", "Снятие средств со счёта не удалось или сообщение некорректно");
-        Assert.assertEquals(customerLoginPage.getBalanceAmount(), "0", "Баланс после списания всей суммы баланса должен быть равен 0");
+        Assert.assertEquals(customerLoginPage.getTransactionMessageText(), CustomerLoginPage.WITHDRAW_SUCCESS_MESSAGE, "Снятие средств со счёта не удалось или сообщение некорректно");
+        Assert.assertEquals(customerLoginPage.getBalanceAmount(), 0, "Баланс после списания всей суммы баланса должен быть равен 0");
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3.7. Проверка корректной очистки истории транзакций")
@@ -188,7 +208,7 @@ public class BankingAppPageTests extends BaseTest {
         Assert.assertEquals(customerLoginPage.getTransactionsCount(), "0", "Таблица транзакций не обновилась после очистки");
 
         customerLoginPage.clickBackButton();
-        Assert.assertEquals(customerLoginPage.getBalanceAmount(), "0", "Баланс после списания всей суммы баланса должен быть равен 0");
+        Assert.assertEquals(customerLoginPage.getBalanceAmount(), 0, "Баланс после списания всей суммы баланса должен быть равен 0");
     }
 
     @Test(description = "5.4. Проверка поиска и удаления покупателя на странице Bank Manager Login")
@@ -198,7 +218,7 @@ public class BankingAppPageTests extends BaseTest {
         bankManagerLoginPage.addCustomer(CUSTOMER_FNAME, CUSTOMER_LNAME, CUSTOMER_POST_CODE);
         driver.switchTo().alert().accept();
 
-        bankManagerLoginPage.openAccount(CUSTOMER_FNAME, CUSTOMER_LNAME, "Rupee");
+        bankManagerLoginPage.openAccount(CUSTOMER_FNAME, CUSTOMER_LNAME, ACCOUNT_CURRENCY);
         driver.switchTo().alert().accept();
 
         bankManagerLoginPage.clickCustomersTableButton();

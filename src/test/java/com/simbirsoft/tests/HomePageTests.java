@@ -94,6 +94,6 @@ public class HomePageTests extends BaseTest {
         homePage.clickOnCourse();
 
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.way2automation.com/lifetime-membership-club/");
-        Assert.assertEquals(driver.findElement(By.cssSelector("h1.elementor-heading-title")).getText(), "LIFETIME MEMBERSHIP CLUB");
+        Assert.assertEquals(driver.findElement(By.cssSelector("h1.elementor-heading-title")).getText(), HomePage.LIFETIME_MEMBERSHIP_CLUB_HEADING);
     }
 }

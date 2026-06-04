@@ -22,6 +22,9 @@ import java.util.Optional;
  * Date: 01.06.2026
  */
 public class BankManagerLoginPage extends BasePage {
+    public static final String ADD_CUSTOMER_SUCCESS_MESSAGE = "Customer added successfully with customer id :";
+    public static final String OPEN_ACCOUNT_SUCCESS_MESSAGE = "Account created successfully with account Number :";
+
     @FindBy(xpath = "//*[@ng-click='addCust()']")
     private WebElement addCustomerFormButton;
 

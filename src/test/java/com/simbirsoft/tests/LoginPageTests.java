@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
  */
 public class LoginPageTests extends BaseTest {
     private final String LOGIN_PAGE_URL = ParameterProvider.get("base.url") + "angularjs-protractor/registeration/#/login";
+    private final String USERNAME_DESCRIPTION = "some description";
 
     private LoginPage loginPage;
 
@@ -32,17 +33,20 @@ public class LoginPageTests extends BaseTest {
     public void testIsFieldsDisplayedAndLoginButtonIsDisabled() {
         Assert.assertTrue(loginPage.allFieldsAreDisplayed(), "Не все поля отображаются");
 
-        Assert.assertTrue(!loginPage.isAllFieldsFilled() && !loginPage.isLoginButtonEnabled(),
-                "Кнопка 'Login' доступна при незаполненных полях");
+        Assert.assertFalse(loginPage.isAllFieldsFilled());
+        Assert.assertFalse(loginPage.isLoginButtonEnabled(), "Кнопка 'Login' доступна при незаполненных полях");
     }
 
     @Test(description = "4.2. Проверка появления сообщения при успешной авторизации")
     public void testValidLoginGetsSuccessMessage() {
-        loginPage.loginWithValidData();
+        String username = loginPage.getUsernameFromTip();
+        String password = loginPage.getPasswordFromTip();
+
+        loginPage.login(username, password, USERNAME_DESCRIPTION);
 
         Assert.assertTrue(loginPage.getHomeMessage().isDisplayed(),
                 "Сообщение об успешной авторизации не отображается");
-        Assert.assertEquals(loginPage.getHomeMessage().getText(), "You're logged in!!",
+        Assert.assertEquals(loginPage.getHomeMessage().getText(), LoginPage.LOGIN_SUCCESS_MESSAGE,
                 "Сообщение об успешной авторизации некорректное");
     }
 
@@ -52,13 +56,17 @@ public class LoginPageTests extends BaseTest {
 
         Assert.assertTrue(loginPage.getIncorrectLoginDataAlert().isDisplayed(),
                 "Сообщение об ошибке при авторизации с некорректными данными не отображается");
-        Assert.assertEquals(loginPage.getIncorrectLoginDataAlert().getText(), "Username or password is incorrect",
+        Assert.assertEquals(loginPage.getIncorrectLoginDataAlert().getText(), LoginPage.LOGIN_FAILURE_MESSAGE,
                 "Сообщение об ошибке при авторизации некорректное");
     }
 
     @Test(description = "4.4. Проверка успешного разлогирования")
     public void testLogoutSucceed() {
-        loginPage.loginWithValidData();
+        String username = loginPage.getUsernameFromTip();
+        String password = loginPage.getPasswordFromTip();
+
+        loginPage.login(username, password, USERNAME_DESCRIPTION);
+
         loginPage.logout();
         Assert.assertTrue(loginPage.allFieldsAreDisplayed(),
                 "Поля для входа не отображаются после разлогирования");

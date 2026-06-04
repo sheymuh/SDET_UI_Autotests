@@ -20,6 +20,9 @@ import java.util.List;
  * Date: 29.05.2026
  */
 public class SampleFormPage extends BasePage {
+    public static final String REGISTER_SUCCESS_TEXT = "User registered successfully!";
+    public static final String LONGEST_HOBBY_WORD = "Traveling";
+
     @FindBy(id = "firstName")
     private WebElement firstNameField;
 
@@ -55,6 +58,16 @@ public class SampleFormPage extends BasePage {
         return registerSuccessMessage;
     }
 
+    /**
+     * Возвращает список текстов хобби
+     */
+    public List<String> getHobbiesTexts() {
+        return hobbiesLabels.stream()
+                .map(WebElement::getText)
+                .map(String::strip)
+                .toList();
+    }
+
     public SampleFormPage selectHobby(String hobbyName) {
         for (WebElement hobbyLabel : hobbiesLabels) {
             if (hobbyLabel.getText().strip().equalsIgnoreCase(hobbyName)) {
@@ -71,22 +84,6 @@ public class SampleFormPage extends BasePage {
         Select select = new Select(genderSelect);
         select.selectByVisibleText(genderVisibleText);
         return this;
-    }
-
-    /**
-     * Находит самое длинное слово из hobbiesCheckboxes
-     */
-    public String findLongestHobbyWord() {
-        String longestWord = "";
-
-        for (WebElement checkbox : hobbiesLabels) {
-            String word = checkbox.getText().strip();
-            if (word.length() > longestWord.length()) {
-                longestWord = word;
-            }
-        }
-
-        return longestWord;
     }
 
     public SampleFormPage register(String firstName, String lastName, String email, String password,

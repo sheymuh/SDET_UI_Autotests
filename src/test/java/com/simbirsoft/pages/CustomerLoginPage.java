@@ -20,6 +20,10 @@ import java.util.List;
  * Date: 01.06.2026
  */
 public class CustomerLoginPage extends BasePage {
+    public static final String DEPOSIT_SUCCESS_MESSAGE = "Deposit Successful";
+    public static final String WITHDRAW_SUCCESS_MESSAGE = "Transaction successful";
+    public static final String WITHDRAW_FAILURE_MESSAGE = "Transaction Failed. You can not withdraw amount more than the balance.";
+
     @FindBy(id = "userSelect")
     private WebElement nameSelect;
 
@@ -97,12 +101,32 @@ public class CustomerLoginPage extends BasePage {
         return transactionMessage.getText();
     }
 
-    public String getBalanceAmount() {
-        return balanceAmount.getText();
+    public int getBalanceAmount() {
+        return Integer.parseInt(balanceAmount.getText());
     }
 
     public String getTransactionsCount() {
         return String.valueOf(transactionsAmounts.size());
+    }
+
+    /**
+     * Возвращает список сумм транзакций из таблицы
+     */
+    public List<String> getTransactionsAmounts() {
+        return transactionsAmounts.stream()
+                .map(WebElement::getText)
+                .map(String::strip)
+                .toList();
+    }
+
+    /**
+     * Возвращает список типов транзакций из таблицы
+     */
+    public List<String> getTransactionsTypes() {
+        return transactionsTypes.stream()
+                .map(WebElement::getText)
+                .map(String::strip)
+                .toList();
     }
 
     public CustomerLoginPage clickTransactionsFormButton() {
@@ -130,8 +154,6 @@ public class CustomerLoginPage extends BasePage {
         waiter.until(ExpectedConditions.elementToBeClickable(depositConfirmButton));
         depositConfirmButton.click();
 
-        waitingForTransactionUpdate();
-
         return this;
     }
 
@@ -154,82 +176,70 @@ public class CustomerLoginPage extends BasePage {
         waiter.until(ExpectedConditions.elementToBeClickable(withdrawConfirmButton));
         withdrawConfirmButton.click();
 
-        waitingForTransactionUpdate();
-
         return this;
     }
 
     /**
-     * Вычисляет баланс клиента по таблице транзакций
-     * @return баланс клиента
+     * Ожидание обновления скриптов транзакций после операции
+     * @return true если транзакция успешно обновлена, false в случае таймаута
      */
-    public int calculateBalanceFromTransactionsTable() {
-        int balance = 0;
-        for (int i = 0; i < transactionsAmounts.size(); i++) {
-            if (transactionsTypes.get(i).getText().equalsIgnoreCase("Credit")) {
-                balance += Integer.parseInt(transactionsAmounts.get(i).getText());
-            } else {
-                balance -= Integer.parseInt(transactionsAmounts.get(i).getText());
-            }
+    public boolean waitingForTransactionUpdate() {
+        try {
+            // Ожидаем завершения всех HTTP запросов
+            waiter.until(driver -> (Boolean) ((JavascriptExecutor) driver).executeScript(
+                    "try {" +
+                            "    var injector = angular.element(document.body).injector();" +
+                            "    return !injector || injector.get('$http').pendingRequests.length === 0;" +
+                            "} catch(e) { return true; }"
+            ));
+        } catch (TimeoutException ex) {
+            System.err.println("TimeoutException при ожидании завершения всех HTTP запросов: " + ex.getMessage());
+            return false;
         }
 
-        return balance;
+        try {
+            // Ожидаем появления транзакции в сервисе
+            waiter.until(driver -> {
+                Long transactionCount = (Long) ((JavascriptExecutor) driver).executeScript(
+                        "try {" +
+                                "    var injector = angular.element(document.body).injector();" +
+                                "    if (!injector) return 0;" +
+                                "    var Transaction = injector.get('Transaction');" +
+                                "    var CustomerData = injector.get('CustomerData');" +
+                                "    var user = CustomerData.getUser();" +
+                                "    var account = CustomerData.getAccount();" +
+                                "    if (user && account) {" +
+                                "        var txs = Transaction.getTransactions(user.id, account.accountNo);" +
+                                "        return txs ? txs.length : 0;" +
+                                "    }" +
+                                "    return 0;" +
+                                "} catch(e) { return 0; }"
+                );
+                return transactionCount != null && transactionCount > 0;
+            });
+        }
+        catch (TimeoutException ex) {
+            System.err.println("TimeoutException при ожидании появления транзакции в сервисе: " + ex.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * Ожидание обновления скриптов транзакций
+     * @param maxRetries максимальное количество попыток
+     * @return true если транзакция успешно обновлена
      */
-    public void waitingForTransactionUpdate() {
-        String oldTransactions = (String) ((JavascriptExecutor) driver)
-                .executeScript("return localStorage.getItem('Transaction');");
+    public boolean waitingForTransactionUpdateWithRetries(int maxRetries) {
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            System.out.println("Попытка " + attempt + " из " + maxRetries);
 
-        try {
-            // Ожидаем, пока все $http запросы завершатся
-            waiter.until(driver -> (Boolean) ((JavascriptExecutor) driver).executeScript(
-                    "return angular.element(document.body).injector().get('$http').pendingRequests.length === 0"
-            ));
-
-            waiter.until(ExpectedConditions.jsReturnsValue("return localStorage.getItem('Transaction');"));
-            waiter.until(ExpectedConditions.jsReturnsValue("var injector = angular.element(document.body).injector();" +
-                    "if (!injector) return 0;" +
-                    "var Transaction = injector.get('Transaction');" +
-                    "var CustomerData = injector.get('CustomerData');" +
-                    "var user = CustomerData.getUser();" +
-                    "var account = CustomerData.getAccount();" +
-                    "if (user && account) {" +
-                    "    var txs = Transaction.getTransactions(user.id, account.accountNo);" +
-                    "    return txs ? txs.length : 0;" +
-                    "}" +
-                    "return 0;"));
-
-            // Ожидаем изменения в localStorage
-            waiter.until(driver -> {
-                String newTransactions = (String) ((JavascriptExecutor) driver)
-                        .executeScript("return localStorage.getItem('Transaction');");
-                return newTransactions != null && !newTransactions.equals(oldTransactions);
-            });
-
-            // Ожидание, пока транзакция появится в сервисе Transaction
-            waiter.until(driver -> {
-                JavascriptExecutor js = (JavascriptExecutor) driver;
-                Long transactionCount = (Long) js.executeScript(
-                        "var injector = angular.element(document.body).injector();" +
-                                "if (!injector) return 0;" +
-                                "var Transaction = injector.get('Transaction');" +
-                                "var CustomerData = injector.get('CustomerData');" +
-                                "var user = CustomerData.getUser();" +
-                                "var account = CustomerData.getAccount();" +
-                                "if (user && account) {" +
-                                "    var txs = Transaction.getTransactions(user.id, account.accountNo);" +
-                                "    return txs ? txs.length : 0;" +
-                                "}" +
-                                "return 0;"
-                );
-                return transactionCount != null && transactionCount > 0;
-            });
-//            Thread.sleep(5000);
-        } catch (TimeoutException ex) {
-            System.out.println(ex.getMessage());
+            if (waitingForTransactionUpdate()) {
+                System.out.println("Транзакция успешно обновлена после " + attempt + " попытки");
+                return true;
+            }
         }
+        return false;
     }
 }

@@ -24,6 +24,8 @@ import java.util.Objects;
  * Date: 28.05.2026
  */
 public class HomePage extends BasePage {
+    public static final String LIFETIME_MEMBERSHIP_CLUB_HEADING = "LIFETIME MEMBERSHIP CLUB";
+
     private HeaderComponent header;
 
     private FooterComponent footer;

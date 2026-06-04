@@ -3,7 +3,6 @@ package com.simbirsoft.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -18,6 +17,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * Date: 28.05.2026
  */
 public class LoginPage extends BasePage {
+    public static final String LOGIN_SUCCESS_MESSAGE = "You're logged in!!";
+    public static final String LOGIN_FAILURE_MESSAGE = "Username or password is incorrect";
+
     @FindBy(id = "username")
     private WebElement usernameField;
 
@@ -70,6 +72,38 @@ public class LoginPage extends BasePage {
                 && (usernameDescriptionField.getAttribute("value").length() >= 3);
     }
 
+    /**
+     * Возвращает username из подсказки
+     * @return username из подсказки или пустую строку если username не найден
+     */
+    public String getUsernameFromTip() {
+        String[] lines = validLoginDataTip.getText().split("\n");
+
+        for (String line : lines) {
+            if (line.startsWith("Username:")) {
+                return line.substring("Username:".length()).strip();
+            }
+        }
+
+        return "";
+    }
+
+    /**
+     * Возвращает password из подсказки
+     * @return password из подсказки или пустую строку если password не найден
+     */
+    public String getPasswordFromTip() {
+        String[] lines = validLoginDataTip.getText().split("\n");
+
+        for (String line : lines) {
+            if (line.startsWith("Password:")) {
+                return line.substring("Password:".length()).strip();
+            }
+        }
+
+        return "";
+    }
+
     public LoginPage login(String username, String password, String usernameDescription) {
         usernameField.clear();
         usernameField.sendKeys(username);
@@ -84,28 +118,8 @@ public class LoginPage extends BasePage {
         return this;
     }
 
-    public LoginPage loginWithValidData() {
-        String[] lines = validLoginDataTip.getText().split("\n");
-        String username = "";
-        String password = "";
-
-        for (String line : lines) {
-            if (line.startsWith("Username:")) {
-                username = line.substring("Username:".length()).trim();
-            } else if (line.startsWith("Password:")) {
-                password = line.substring("Password:".length()).trim();
-            }
-        }
-
-        login(username, password, "some description");
-        waiter.until(ExpectedConditions.visibilityOf(homeMessage));
-
-        return this;
-    }
-
     public LoginPage logout() {
         logoutButton.click();
         return this;
     }
-
 }

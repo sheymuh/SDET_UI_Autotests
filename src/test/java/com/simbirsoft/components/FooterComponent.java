@@ -27,7 +27,7 @@ public class FooterComponent extends BasePage {
     private WebElement footerContainer;
 
     // Адрес, номера телефонов и почты из футера
-    @FindBy(css = ".elementor-location-footer .elementor-element-695441a0 .elementor-icon-list-text")
+    @FindBy(xpath = "//h4/text()[. ='ABOUT US ']/following::span[@class='elementor-icon-list-text']")
     private List<WebElement> footerAboutUsTexts;
 
     public FooterComponent(WebDriver driver, WebDriverWait waiter) {
