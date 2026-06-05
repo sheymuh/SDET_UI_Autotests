@@ -2,6 +2,7 @@ package com.simbirsoft.tests;
 
 import com.simbirsoft.helpers.ParameterProvider;
 import com.simbirsoft.pages.HomePage;
+import io.qameta.allure.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -20,6 +21,7 @@ import org.testng.annotations.Test;
  * <p>
  * Date: 28.05.2026
  */
+@Epic("Главная страница")
 public class HomePageTests extends BaseTest {
     private HomePage homePage;
 
@@ -29,7 +31,11 @@ public class HomePageTests extends BaseTest {
         driver.get(ParameterProvider.get("base.url"));
     }
 
+
     @Test(description = "1.1. Проверка открытия страницы и отображения основных элементов")
+    @Feature("Отображение UI компонентов")
+    @Story("Открытие страницы")
+    @Severity(SeverityLevel.BLOCKER)
     public void testHomePageOpenedAndMainElementsDisplayed() {
         Assert.assertTrue(homePage.isPageOpened(), "Страница не открылась");
         Assert.assertTrue(homePage.areAllMainElementsDisplayed(),
@@ -37,6 +43,9 @@ public class HomePageTests extends BaseTest {
     }
 
     @Test(description = "1.2. Проверка хедера на наличие контактной информации")
+    @Feature("Отображение UI компонентов")
+    @Story("Контакты в хедере")
+    @Severity(SeverityLevel.NORMAL)
     public void testHeaderContactInfoDisplayed() {
         Assert.assertTrue(homePage.getHeader().isHeaderDisplayed(), "Хедер не отображается");
         Assert.assertFalse(homePage.getHeader().getIndianPhoneNumbers().isEmpty() &&
@@ -51,6 +60,9 @@ public class HomePageTests extends BaseTest {
     }
 
     @Test(description = "1.3. Проверка работы кнопок навигации блока с курсами")
+    @Feature("Работа UI компонентов")
+    @Story("Карусель курсов")
+    @Severity(SeverityLevel.NORMAL)
     public void testCoursesCarouselNavigationButtonsAreWorking() {
         String firstSlideTitle = homePage.getCurrentSlideTitle();
         Assert.assertFalse(firstSlideTitle.isEmpty(),
@@ -67,6 +79,9 @@ public class HomePageTests extends BaseTest {
     }
 
     @Test(description = "1.4. Проверка футера на наличие адреса и контактной информации")
+    @Feature("Отображение UI компонентов")
+    @Story("Контакты в футере")
+    @Severity(SeverityLevel.NORMAL)
     public void testFooterContactInfoDisplayed() {
         waiter.until(ExpectedConditions.visibilityOf(homePage.getFooter().getFooterAboutUsTexts().get(0)));
 
@@ -81,6 +96,9 @@ public class HomePageTests extends BaseTest {
     }
 
     @Test(description = "2. Проверка видимости меню после прокрутки вниз")
+    @Feature("Отображение UI компонентов")
+    @Story("Меню при скролле")
+    @Severity(SeverityLevel.MINOR)
     public void testNavMenuIsDisplayedAfterScroll() {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", homePage.getFooter().getFooterContainer());
 
@@ -90,6 +108,9 @@ public class HomePageTests extends BaseTest {
     }
 
     @Test(description = "3. Проверка перехода по меню навигации на страницу All courses -> Lifetime membership")
+    @Feature("Навигация")
+    @Story("Навигация на Lifetime Membership")
+    @Severity(SeverityLevel.CRITICAL)
     public void testLifetimeMembershipNavigation() {
         homePage.clickOnCourse();
 

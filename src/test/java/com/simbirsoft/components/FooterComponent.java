@@ -1,6 +1,7 @@
 package com.simbirsoft.components;
 
 import com.simbirsoft.pages.BasePage;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -34,18 +35,22 @@ public class FooterComponent extends BasePage {
         super(driver, waiter);
     }
 
+    @Step("Получение контейнера футера")
     public WebElement getFooterContainer() {
         return footerContainer;
     }
 
+    @Step("Проверка отображения футера")
     public boolean isFooterDisplayed() {
         return footerContainer.isDisplayed();
     }
 
+    @Step("Получение текстовых элементов 'About Us' из футера")
     public List<WebElement> getFooterAboutUsTexts() {
         return footerAboutUsTexts;
     }
 
+    @Step("Получение адреса из футера")
     public String getAddress() {
         return footerAboutUsTexts.stream()
                 .filter(el -> el.getText().contains("CDR Complex") || el.getText().contains("Sector 15"))
@@ -54,6 +59,7 @@ public class FooterComponent extends BasePage {
                 .orElse("");
     }
 
+    @Step("Получение телефонов из футера")
     public List<String> getFooterPhones() {
         if (footerAboutUsTexts.isEmpty()) {
             return new ArrayList<>();
@@ -65,6 +71,7 @@ public class FooterComponent extends BasePage {
                 .collect(Collectors.toList());
     }
 
+    @Step("Получение email из футера")
     public List<String> getFooterEmails() {
         if (footerAboutUsTexts.isEmpty()) {
             return new ArrayList<>();

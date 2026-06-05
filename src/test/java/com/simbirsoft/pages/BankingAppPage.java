@@ -1,5 +1,6 @@
 package com.simbirsoft.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -33,21 +34,25 @@ public class BankingAppPage extends BasePage {
         super(driver, waiter);
     }
 
+    @Step("Клик по кнопке 'Sample Form'")
     public SampleFormPage clickSampleFormButton() {
         sampleFormButton.click();
         return new SampleFormPage(driver, waiter);
     }
 
+    @Step("Клик по кнопке 'Customer Login'")
     public CustomerLoginPage clickCustomerLoginButton() {
         customerLoginButton.click();
         return new CustomerLoginPage(driver, waiter);
     }
 
+    @Step("Клик по кнопке 'Bank Manager Login'")
     public BankManagerLoginPage clickBankManagerLoginButton() {
         bankManagerLoginButton.click();
         return new BankManagerLoginPage(driver, waiter);
     }
 
+    @Step("Клик по кнопке 'Home'")
     public BankingAppPage clickHomeButton() {
         homeButton.click();
         return this;

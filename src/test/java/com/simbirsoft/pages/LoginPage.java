@@ -1,5 +1,6 @@
 package com.simbirsoft.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -51,22 +52,27 @@ public class LoginPage extends BasePage {
         super(driver, waiter);
     }
 
+    @Step("Получение элемента сообщения об успешной авторизации")
     public WebElement getHomeMessage() {
         return homeMessage;
     }
 
+    @Step("Получение элемента сообщения об ошибке авторизации")
     public WebElement getIncorrectLoginDataAlert() {
         return incorrectLoginDataAlert;
     }
 
+    @Step("Проверка доступности кнопки 'Login'")
     public boolean isLoginButtonEnabled() {
         return loginButton.isEnabled();
     }
 
+    @Step("Проверка отображения всех полей формы")
     public boolean allFieldsAreDisplayed() {
         return usernameField.isDisplayed() && passwordField.isDisplayed() && usernameDescriptionField.isDisplayed();
     }
 
+    @Step("Проверка все ли поля заполнены")
     public boolean isAllFieldsFilled() {
         return (usernameField.getAttribute("value").length() >= 3) && (passwordField.getAttribute("value").length() >= 3)
                 && (usernameDescriptionField.getAttribute("value").length() >= 3);
@@ -76,6 +82,7 @@ public class LoginPage extends BasePage {
      * Возвращает username из подсказки
      * @return username из подсказки или пустую строку если username не найден
      */
+    @Step("Получение username из подсказки")
     public String getUsernameFromTip() {
         String[] lines = validLoginDataTip.getText().split("\n");
 
@@ -92,6 +99,7 @@ public class LoginPage extends BasePage {
      * Возвращает password из подсказки
      * @return password из подсказки или пустую строку если password не найден
      */
+    @Step("Получение password из подсказки")
     public String getPasswordFromTip() {
         String[] lines = validLoginDataTip.getText().split("\n");
 
@@ -104,6 +112,7 @@ public class LoginPage extends BasePage {
         return "";
     }
 
+    @Step("Авторизация с параметрами: username={username}, password={password}, description={usernameDescription}")
     public LoginPage login(String username, String password, String usernameDescription) {
         usernameField.clear();
         usernameField.sendKeys(username);
@@ -118,6 +127,7 @@ public class LoginPage extends BasePage {
         return this;
     }
 
+    @Step("Клик по кнопке 'Logout'")
     public LoginPage logout() {
         logoutButton.click();
         return this;

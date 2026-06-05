@@ -1,5 +1,6 @@
 package com.simbirsoft.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -71,12 +72,14 @@ public class BankManagerLoginPage extends BasePage {
         super(driver, waiter);
     }
 
+    @Step("Клик по кнопке 'Customers'")
     public BankManagerLoginPage clickCustomersTableButton() {
         customersTableButton.click();
         waiter.until(ExpectedConditions.visibilityOf(searchCustomerField));
         return this;
     }
 
+    @Step("Заполнение полей клиента: firstName={fName}, lastName={lName}, postCode={postCode}")
     public BankManagerLoginPage fillCustomerFields(String fName, String lName, String postCode) {
         firstNameField.clear();
         firstNameField.sendKeys(fName);
@@ -90,6 +93,7 @@ public class BankManagerLoginPage extends BasePage {
         return this;
     }
 
+    @Step("Добавление нового клиента с параметрами: first_name={fName}, last_name={lName}, post_code={postCode}")
     public BankManagerLoginPage addCustomer(String fName, String lName, String postCode) {
         addCustomerFormButton.click();
 
@@ -100,6 +104,7 @@ public class BankManagerLoginPage extends BasePage {
         return this;
     }
 
+    @Step("Выбор клиента: {customerVisibleText}")
     public BankManagerLoginPage selectCustomerByVisibleText(String customerVisibleText) {
         Select select = new Select(customerSelect);
         select.selectByVisibleText(customerVisibleText);
@@ -107,6 +112,7 @@ public class BankManagerLoginPage extends BasePage {
         return this;
     }
 
+    @Step("Выбор валюты: {currencyVisibleText}")
     public BankManagerLoginPage selectCurrencyByVisibleText(String currencyVisibleText) {
         Select select = new Select(currencySelect);
         select.selectByVisibleText(currencyVisibleText);
@@ -114,6 +120,7 @@ public class BankManagerLoginPage extends BasePage {
         return this;
     }
 
+    @Step("Открытие счёта для клиента {fName} {lName} в валюте {currency}")
     public BankManagerLoginPage openAccount(String fName, String lName, String currency) {
         openAccountFormButton.click();
 
@@ -125,6 +132,7 @@ public class BankManagerLoginPage extends BasePage {
         return this;
     }
 
+    @Step("Поиск индекса клиента по имени: {fName}")
     public int findCustomerIndexByFirstName(String fName) {
         Optional<WebElement> customer = customersFirstNames.stream()
                 .filter(name -> fName.equalsIgnoreCase(name.getText()))
@@ -133,6 +141,7 @@ public class BankManagerLoginPage extends BasePage {
         return customer.map(webElement -> customersFirstNames.indexOf(webElement)).orElse(-1);
     }
 
+    @Step("Удаление клиента по индексу: {index}")
     public BankManagerLoginPage deleteCustomer(int index) {
         deleteButtons.get(index).click();
 

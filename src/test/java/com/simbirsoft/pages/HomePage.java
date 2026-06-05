@@ -2,6 +2,7 @@ package com.simbirsoft.pages;
 
 import com.simbirsoft.components.FooterComponent;
 import com.simbirsoft.components.HeaderComponent;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -61,6 +62,7 @@ public class HomePage extends BasePage {
         this.footer = new FooterComponent(driver, waiter);
     }
 
+    @Step("Проверка, что открыта главная страница")
     public boolean isPageOpened() {
         return Objects.equals(driver.getCurrentUrl(), "https://www.way2automation.com/");
     }
@@ -68,6 +70,7 @@ public class HomePage extends BasePage {
     /**
      * Проверяет отображение всех основных элементов страницы.
      */
+    @Step("Проверка отображения всех основных элементов страницы")
     public boolean areAllMainElementsDisplayed() {
         boolean isHeaderDisplayed = header.isHeaderDisplayed();
 
@@ -81,14 +84,17 @@ public class HomePage extends BasePage {
         return isHeaderDisplayed && isNavDisplayed && isCourseBlockDisplayed && isFooterDisplayed;
     }
 
+    @Step("Получение компонента хедера")
     public HeaderComponent getHeader() {
         return header;
     }
 
+    @Step("Получение компонента футера")
     public FooterComponent getFooter() {
         return footer;
     }
 
+    @Step("Клик по меню 'All Courses' -> 'Lifetime Membership'")
     public HomePage clickOnCourse() {
         allCoursesNavMenuItem.click();
         waiter.until(ExpectedConditions.elementToBeClickable(lifetimeMembershipCourse));
@@ -96,18 +102,21 @@ public class HomePage extends BasePage {
         return this;
     }
 
+    @Step("Проверка отображения меню навигации")
     public boolean isNavMenuDisplayed() {
         return !navigationMenuItems.isEmpty() &&
                 navigationMenuItems.get(0).isDisplayed();
 
     }
 
+    @Step("Клик по кнопке '>' (вперёд) в карусели")
     public HomePage clickNextButton() {
         waiter.until(ExpectedConditions.elementToBeClickable(carouselNextButton));
         carouselNextButton.click();
         return this;
     }
 
+    @Step("Клик по кнопке '<' (назад) в карусели")
     public HomePage clickPrevButton() {
         waiter.until(ExpectedConditions.elementToBeClickable(carouselPrevButton));
         carouselPrevButton.click();
@@ -117,6 +126,7 @@ public class HomePage extends BasePage {
     /**
      * Получает видимый (текущий отображаемый) слайд.
      */
+    @Step("Получение текущего видимого слайда карусели")
     public WebElement getCurrentlyVisibleSlide() {
         waiter.until(ExpectedConditions.visibilityOf(coursesCarousel));
 
@@ -130,6 +140,7 @@ public class HomePage extends BasePage {
     /**
      * Возвращает заголовок текущего видимого слайда.
      */
+    @Step("Получение заголовка текущего слайда")
     public String getCurrentSlideTitle() {
         WebElement visibleSlide = getCurrentlyVisibleSlide();
 
@@ -140,6 +151,7 @@ public class HomePage extends BasePage {
     /**
      * Проверяет, изменился ли видимый слайд после нажатия.
      */
+    @Step("Проверка изменения видимого слайда после нажатия")
     public boolean hasSlideChanged(String previousSlideTitle) {
         String newSlideTitle = getCurrentSlideTitle();
         return !newSlideTitle.equals(previousSlideTitle);

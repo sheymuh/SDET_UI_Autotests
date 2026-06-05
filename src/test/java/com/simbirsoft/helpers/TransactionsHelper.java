@@ -1,5 +1,7 @@
 package com.simbirsoft.helpers;
 
+import io.qameta.allure.Step;
+
 import java.util.List;
 
 /**
@@ -22,6 +24,7 @@ public class TransactionsHelper {
      * @param types список типов (Credit/Debit)
      * @return вычисленный баланс
      */
+    @Step("Вычисление баланса из списков сумм: {amounts} и типов транзакций: {types}")
     public static int calculateBalance(List<String> amounts, List<String> types) {
         if (amounts == null || types == null || amounts.size() != types.size()) {
             throw new IllegalArgumentException("Списки сумм и типов должны быть одинакового размера");
