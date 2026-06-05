@@ -1,5 +1,7 @@
 package com.simbirsoft.helpers;
 
+import io.qameta.allure.Step;
+
 import java.util.List;
 
 /**
@@ -20,6 +22,7 @@ public class StringHelper {
      * @param words список слов
      * @return самое длинное слово, или пустую строку если список пуст
      */
+    @Step("Поиск самого длинного слова из списка: {words}")
     public static String findLongestWord(List<String> words) {
         if (words == null || words.isEmpty()) {
             return "";

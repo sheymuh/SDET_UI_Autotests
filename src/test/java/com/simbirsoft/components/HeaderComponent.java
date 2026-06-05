@@ -1,6 +1,7 @@
 package com.simbirsoft.components;
 
 import com.simbirsoft.pages.BasePage;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -47,24 +48,29 @@ public class HeaderComponent extends BasePage {
         super(driver, waiter);
     }
 
+    @Step("Проверка отображения хедера")
     public boolean isHeaderDisplayed() {
         return !contactLinks.isEmpty() && !socialIcons.isEmpty() &&
                 contactLinks.get(0).isDisplayed() &&
                 socialIcons.get(0).isDisplayed();
     }
 
+    @Step("Получение Skype ID из хедера")
     public String getSkypeId() {
         return skypeLink.getText().trim();
     }
 
+    @Step("Получение Email из хедера")
     public String getEmail() {
         return emailLink.getText().trim();
     }
 
+    @Step("Получение телефона США из хедера")
     public String getUsaPhoneNumber() {
         return usaPhoneNum.getText().trim();
     }
 
+    @Step("Получение индийских телефонов из хедера")
     public List<String> getIndianPhoneNumbers() {
         return indianPhoneNums.stream()
                 .map(el -> el.getText().trim())
@@ -72,9 +78,11 @@ public class HeaderComponent extends BasePage {
                 .collect(Collectors.toList());
     }
 
+    @Step("Получение ссылок на соцсети из хедера")
     public List<String> getSocialLinks() {
         return socialIcons.stream()
-                .map(el -> el.getAttribute("href"))
+                .map(el -> el
+                        .getAttribute("href"))
                 .collect(Collectors.toList());
     }
 }

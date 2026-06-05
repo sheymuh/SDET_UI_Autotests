@@ -1,5 +1,6 @@
 package com.simbirsoft.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -85,6 +86,7 @@ public class CustomerLoginPage extends BasePage {
         super(driver, waiter);
     }
 
+    @Step("Авторизация клиента: {fName} {lName}")
     public CustomerLoginPage login(String fName, String lName) {
         Select select = new Select(nameSelect);
         select.selectByVisibleText(fName + " " + lName);
@@ -93,18 +95,22 @@ public class CustomerLoginPage extends BasePage {
         return this;
     }
 
+    @Step("Получение текста приветственного заголовка")
     public String getWelcomeHeadingText() {
         return welcomeHeading.getText();
     }
 
+    @Step("Получение текста сообщения о транзакции")
     public String getTransactionMessageText() {
         return transactionMessage.getText();
     }
 
+    @Step("Получение текущего баланса")
     public int getBalanceAmount() {
         return Integer.parseInt(balanceAmount.getText());
     }
 
+    @Step("Получение количества транзакций")
     public String getTransactionsCount() {
         return String.valueOf(transactionsAmounts.size());
     }
@@ -112,6 +118,7 @@ public class CustomerLoginPage extends BasePage {
     /**
      * Возвращает список сумм транзакций из таблицы
      */
+    @Step("Получение списка сумм транзакций из таблицы")
     public List<String> getTransactionsAmounts() {
         return transactionsAmounts.stream()
                 .map(WebElement::getText)
@@ -122,6 +129,7 @@ public class CustomerLoginPage extends BasePage {
     /**
      * Возвращает список типов транзакций из таблицы
      */
+    @Step("Получение списка типов транзакций из таблицы")
     public List<String> getTransactionsTypes() {
         return transactionsTypes.stream()
                 .map(WebElement::getText)
@@ -129,21 +137,25 @@ public class CustomerLoginPage extends BasePage {
                 .toList();
     }
 
+    @Step("Клик по кнопке открытия таблицы транзакций 'Transactions'")
     public CustomerLoginPage clickTransactionsFormButton() {
         transactionsTableButton.click();
         return this;
     }
 
+    @Step("Клик по кнопке 'Reset'")
     public CustomerLoginPage clickResetTransactionsButton() {
         resetTransactionsButton.click();
         return this;
     }
 
+    @Step("Клик по кнопке 'Back'")
     public CustomerLoginPage clickBackButton() {
         backButton.click();
         return this;
     }
 
+    @Step("Выполнение пополнения счёта на сумму: {amount}")
     public CustomerLoginPage deposit(String amount) {
         waiter.until(ExpectedConditions.elementToBeClickable(depositFormButton));
         depositFormButton.click();
@@ -161,11 +173,13 @@ public class CustomerLoginPage extends BasePage {
      * Проверка есть ли передаваемая сумма в таблице транзакций
      * @return true - сумма есть, false - суммы нет
      */
+    @Step("Поиск транзакции на сумму: {amount}")
     public boolean findTransactionAmount(String amount) {
         return transactionsAmounts.stream()
                 .anyMatch(am -> amount.equalsIgnoreCase(am.getText()));
     }
 
+    @Step("Выполнение снятия со счёта суммы: {amount}")
     public CustomerLoginPage withdraw(String amount) {
         waiter.until(ExpectedConditions.elementToBeClickable(withdrawFormButton));
         withdrawFormButton.click();
@@ -183,6 +197,7 @@ public class CustomerLoginPage extends BasePage {
      * Ожидание обновления скриптов транзакций после операции
      * @return true если транзакция успешно обновлена, false в случае таймаута
      */
+    @Step("Ожидание обновления транзакций")
     public boolean waitingForTransactionUpdate() {
         try {
             // Ожидаем завершения всех HTTP запросов
@@ -227,10 +242,11 @@ public class CustomerLoginPage extends BasePage {
     }
 
     /**
-     * Ожидание обновления скриптов транзакций
+     * Ожидание обновления скриптов транзакций в несколько попыток
      * @param maxRetries максимальное количество попыток
      * @return true если транзакция успешно обновлена
      */
+    @Step("Ожидание обновления транзакций в несколько попыток: {maxRetries}")
     public boolean waitingForTransactionUpdateWithRetries(int maxRetries) {
         for (int attempt = 1; attempt <= maxRetries; attempt++) {
             System.out.println("Попытка " + attempt + " из " + maxRetries);

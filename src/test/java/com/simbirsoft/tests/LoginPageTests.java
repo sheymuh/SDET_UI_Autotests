@@ -2,6 +2,7 @@ package com.simbirsoft.tests;
 
 import com.simbirsoft.helpers.ParameterProvider;
 import com.simbirsoft.pages.LoginPage;
+import io.qameta.allure.*;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -17,6 +18,8 @@ import org.testng.annotations.Test;
  * <p>
  * Date: 28.05.2026
  */
+@Epic("Авторизация")
+@Feature("Форма логина")
 public class LoginPageTests extends BaseTest {
     private final String LOGIN_PAGE_URL = ParameterProvider.get("base.url") + "angularjs-protractor/registeration/#/login";
     private final String USERNAME_DESCRIPTION = "some description";
@@ -30,6 +33,8 @@ public class LoginPageTests extends BaseTest {
     }
 
     @Test(description = "4.1. Проверка на отображение полей и недоступность кнопки при незаполненных полях")
+    @Story("Отображение формы")
+    @Severity(SeverityLevel.BLOCKER)
     public void testIsFieldsDisplayedAndLoginButtonIsDisabled() {
         Assert.assertTrue(loginPage.allFieldsAreDisplayed(), "Не все поля отображаются");
 
@@ -38,6 +43,8 @@ public class LoginPageTests extends BaseTest {
     }
 
     @Test(description = "4.2. Проверка появления сообщения при успешной авторизации")
+    @Story("Успешная авторизация")
+    @Severity(SeverityLevel.MINOR)
     public void testValidLoginGetsSuccessMessage() {
         String username = loginPage.getUsernameFromTip();
         String password = loginPage.getPasswordFromTip();
@@ -51,6 +58,8 @@ public class LoginPageTests extends BaseTest {
     }
 
     @Test(description = "4.3. Проверка появления сообщения об ошибке при авторизации с некорректными данными")
+    @Story("Неуспешная авторизация")
+    @Severity(SeverityLevel.NORMAL)
     public void testIncorrectLoginGetsErrorMessage() {
         loginPage.login("user", "123", "polzovatel'");
 
@@ -61,6 +70,8 @@ public class LoginPageTests extends BaseTest {
     }
 
     @Test(description = "4.4. Проверка успешного разлогирования")
+    @Story("Разлогирование")
+    @Severity(SeverityLevel.CRITICAL)
     public void testLogoutSucceed() {
         String username = loginPage.getUsernameFromTip();
         String password = loginPage.getPasswordFromTip();

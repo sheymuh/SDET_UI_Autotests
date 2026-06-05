@@ -1,5 +1,6 @@
 package com.simbirsoft.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -54,6 +55,7 @@ public class SampleFormPage extends BasePage {
         super(driver, waiter);
     }
 
+    @Step("Получение элемента сообщения об успешной регистрации")
     public WebElement getRegisterSuccessMessage() {
         return registerSuccessMessage;
     }
@@ -61,6 +63,7 @@ public class SampleFormPage extends BasePage {
     /**
      * Возвращает список текстов хобби
      */
+    @Step("Получение списка текстов хобби из select")
     public List<String> getHobbiesTexts() {
         return hobbiesLabels.stream()
                 .map(WebElement::getText)
@@ -68,6 +71,7 @@ public class SampleFormPage extends BasePage {
                 .toList();
     }
 
+    @Step("Выбор хобби: {hobbyName}")
     public SampleFormPage selectHobby(String hobbyName) {
         for (WebElement hobbyLabel : hobbiesLabels) {
             if (hobbyLabel.getText().strip().equalsIgnoreCase(hobbyName)) {
@@ -80,12 +84,15 @@ public class SampleFormPage extends BasePage {
         throw new IllegalArgumentException("Хобби не найдено: " + hobbyName);
     }
 
+    @Step("Выбор гендера: {genderVisibleText}")
     public SampleFormPage selectGenderByVisibleText(String genderVisibleText) {
         Select select = new Select(genderSelect);
         select.selectByVisibleText(genderVisibleText);
         return this;
     }
 
+    @Step("Регистрация пользователя: first_name={firstName}, last_name={lastName}, email={email}, " +
+            "password={password}, hobbies={hobbies}, gender={gender}, aboutYourself={aboutYourself}")
     public SampleFormPage register(String firstName, String lastName, String email, String password,
                                    List<String> hobbies, String gender, String aboutYourself) {
         firstNameField.sendKeys(firstName);

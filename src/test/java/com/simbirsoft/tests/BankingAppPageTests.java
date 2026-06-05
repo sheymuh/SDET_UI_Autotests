@@ -4,6 +4,7 @@ import com.simbirsoft.helpers.ParameterProvider;
 import com.simbirsoft.helpers.StringHelper;
 import com.simbirsoft.helpers.TransactionsHelper;
 import com.simbirsoft.pages.*;
+import io.qameta.allure.*;
 import org.openqa.selenium.*;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -24,6 +25,7 @@ import java.util.Random;
  * <p>
  * Date: 29.05.2026
  */
+@Epic("Банковское приложение")
 public class BankingAppPageTests extends BaseTest {
     private final String BANKING_APP_PAGE_URL = ParameterProvider.get("base.url") + "angularjs-protractor/banking/#/login";
     private final String CUSTOMER_FNAME = "клиент";
@@ -59,6 +61,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(description = "5.1. Проверка появления сообщения при успешной регистрации в форме Sample Form")
+    @Feature("Регистрация в Sample Form")
+    @Story("Успешная регистрация")
+    @Severity(SeverityLevel.NORMAL)
     public void testSampleFormSuccessfulRegisterGetsSuccessMessage() {
         SampleFormPage sampleFormPage = bankingAppPage.clickSampleFormButton();
 
@@ -82,6 +87,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(description = "5.2.1. Проверка появления сообщения при успешном добавлении нового покупателя на странице Bank Manager Login")
+    @Feature("Аккаунт менеджера банка")
+    @Story("Добавление покупателя")
+    @Severity(SeverityLevel.CRITICAL)
     public void testAddCustomerWithValidDataGetsSuccessMessage() {
         bankManagerLoginPage = bankingAppPage.clickBankManagerLoginButton();
 
@@ -94,6 +102,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(description = "5.2.2. Проверка появления сообщения при успешном открытии аккаунта покупателя на странице Bank Manager Login")
+    @Feature("Аккаунт менеджера банка")
+    @Story("Открытие аккаунта покупателя")
+    @Severity(SeverityLevel.CRITICAL)
     public void testOpenAccountGetsSuccessMessage() {
         bankManagerLoginPage = bankingAppPage.clickBankManagerLoginButton();
 
@@ -108,6 +119,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3. Проверка входа в созданный аккаунт")
+    @Feature("Аккаунт клиента")
+    @Story("Авторизация клиента")
+    @Severity(SeverityLevel.BLOCKER)
     public void testCustomerLoginGetsWelcomeHeading() {
         String welcomeHeading = "Welcome " + CUSTOMER_FNAME + " " + CUSTOMER_LNAME + " !!";
 
@@ -115,6 +129,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3.1. Проверка успешного пополнения счёта и обновления транзакций")
+    @Feature("Аккаунт клиента")
+    @Story("Успешное пополнение счёта")
+    @Severity(SeverityLevel.CRITICAL)
     public void testSuccessfulDepositWithTransactionsUpdate() {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
         Assert.assertEquals(customerLoginPage.getTransactionMessageText(), CustomerLoginPage.DEPOSIT_SUCCESS_MESSAGE, "Пополнение счёта не удалось или сообщение некорректно");
@@ -126,6 +143,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3.2. Проверка неуспешного пополнения счёта и отсутствия изменений в транзакциях")
+    @Feature("Аккаунт клиента")
+    @Story("Неуспешное пополнение счёта")
+    @Severity(SeverityLevel.CRITICAL)
     public void testUnsuccessfulDepositWithNoTransactionsUpdate() {
         String amount = "0";
         customerLoginPage.deposit(amount);
@@ -136,6 +156,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3.3. Проверка успешного снятия средств со счёта и обновления транзакций")
+    @Feature("Аккаунт клиента")
+    @Story("Успешное снятие средств со счёта")
+    @Severity(SeverityLevel.CRITICAL)
     public void testSuccessfulWithdrawWithTransactionsUpdate() {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
 
@@ -154,6 +177,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3.4. Проверка неуспешного снятия средств со счёта и отсутствия изменений в транзакциях")
+    @Feature("Аккаунт клиента")
+    @Story("Неуспешное снятие средств со счёта")
+    @Severity(SeverityLevel.CRITICAL)
     public void testUnsuccessfulWithdrawWithNoTransactionsUpdate() {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
         String amount = "1000000";
@@ -165,6 +191,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3.5. Проверка равенства баланса, вычисленного из таблицы транзакций, и баланса из страницы аккаунта")
+    @Feature("Аккаунт клиента")
+    @Story("Просмотр транзакций")
+    @Severity(SeverityLevel.CRITICAL)
     public void testCalculateBalanceFromTransaction() {
         customerLoginPage.deposit("2000");
         customerLoginPage.deposit("750");
@@ -186,6 +215,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3.6. Проверка корректного списания всей суммы баланса")
+    @Feature("Аккаунт клиента")
+    @Story("Успешное снятие средств со счёта")
+    @Severity(SeverityLevel.CRITICAL)
     public void testWithdrawAllBalanceWithTransactionsUpdate() {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
 
@@ -198,6 +230,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(groups = {"needLoginCustomer"}, description = "5.3.7. Проверка корректной очистки истории транзакций")
+    @Feature("Аккаунт клиента")
+    @Story("Очистка истории транзакций")
+    @Severity(SeverityLevel.CRITICAL)
     public void testResetTransactionsWithTransactionsUpdate() {
         customerLoginPage.deposit(DEPOSIT_AMOUNT);
         customerLoginPage.deposit("500");
@@ -212,6 +247,9 @@ public class BankingAppPageTests extends BaseTest {
     }
 
     @Test(description = "5.4. Проверка поиска и удаления покупателя на странице Bank Manager Login")
+    @Feature("Аккаунт менеджера банка")
+    @Story("Удаление покупателя")
+    @Severity(SeverityLevel.CRITICAL)
     public void testSearchAndDeleteCustomer() {
         bankManagerLoginPage = bankingAppPage.clickBankManagerLoginButton();
 
