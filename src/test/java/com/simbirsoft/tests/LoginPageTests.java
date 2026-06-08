@@ -3,9 +3,12 @@ package com.simbirsoft.tests;
 import com.simbirsoft.helpers.ParameterProvider;
 import com.simbirsoft.pages.LoginPage;
 import io.qameta.allure.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 /**
  * LoginPageTests.java
@@ -32,6 +35,26 @@ public class LoginPageTests extends BaseTest {
         driver.get(LOGIN_PAGE_URL);
     }
 
+    @DataProvider(name = "incorrectLogin")
+    public Object[][] incorrectLoginData() {
+        return new Object[][]{
+                { "angular", "1234", USERNAME_DESCRIPTION },
+                { "abc123", "password", USERNAME_DESCRIPTION },
+                { "abc123", "1234", USERNAME_DESCRIPTION },
+        };
+    }
+
+    @DataProvider(name = "validation")
+    public Object[][] fieldsValidationData() {
+        // { username, password, username description, usernameMessage, passwordMessage, isLoginButtonEnabled }
+        return new Object[][] {
+                { "oi", "23", USERNAME_DESCRIPTION, LoginPage.USERNAME_SHORT_MESSAGE, LoginPage.PASSWORD_SHORT_MESSAGE, false },
+                { "", "", "", LoginPage.USERNAME_EMPTY_MESSAGE, LoginPage.PASSWORD_EMPTY_MESSAGE, false },
+                { "!-_. `:", "!-_. `:", USERNAME_DESCRIPTION, null, null, true },
+                { "a".repeat(51), "1".repeat(101), USERNAME_DESCRIPTION, null, null, true},
+        };
+    }
+
     @Test(description = "4.1. Проверка на отображение полей и недоступность кнопки при незаполненных полях")
     @Story("Отображение формы")
     @Severity(SeverityLevel.BLOCKER)
@@ -45,7 +68,7 @@ public class LoginPageTests extends BaseTest {
     @Test(description = "4.2. Проверка появления сообщения при успешной авторизации")
     @Story("Успешная авторизация")
     @Severity(SeverityLevel.MINOR)
-    public void testValidLoginGetsSuccessMessage() {
+    public void testCorrectLoginGetsSuccessMessage() {
         String username = loginPage.getUsernameFromTip();
         String password = loginPage.getPasswordFromTip();
 
@@ -57,16 +80,31 @@ public class LoginPageTests extends BaseTest {
                 "Сообщение об успешной авторизации некорректное");
     }
 
-    @Test(description = "4.3. Проверка появления сообщения об ошибке при авторизации с некорректными данными")
+    @Test(dataProvider = "incorrectLogin", description = "4.3. Проверка появления сообщения об ошибке при авторизации с некорректными данными")
     @Story("Неуспешная авторизация")
     @Severity(SeverityLevel.NORMAL)
-    public void testIncorrectLoginGetsErrorMessage() {
-        loginPage.login("user", "123", "polzovatel'");
+    public void testIncorrectLoginGetsErrorMessage(String username, String password, String usernameDescription) {
+        loginPage.login(username, password, usernameDescription);
 
         Assert.assertTrue(loginPage.getIncorrectLoginDataAlert().isDisplayed(),
                 "Сообщение об ошибке при авторизации с некорректными данными не отображается");
         Assert.assertEquals(loginPage.getIncorrectLoginDataAlert().getText(), LoginPage.LOGIN_FAILURE_MESSAGE,
                 "Сообщение об ошибке при авторизации некорректное");
+    }
+
+    @Test(dataProvider = "fieldsValidationData", description = "Проверка валидации с корректными и некорректными данными")
+    @Story("Валидация")
+    @Severity(SeverityLevel.CRITICAL)
+    public void testValidationIsCorrect(String username, String password, String usernameDescription,
+                                        String usernameValMessage, String passwordValMessage,
+                                        boolean isLoginButtonEnabled) {
+        loginPage.login(username, password, usernameDescription);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(loginPage.getUsernameValidationMessageText(), usernameValMessage, "Валидация поля 'username' не сработала или сообщение некорректно");
+        softAssert.assertEquals(loginPage.getPasswordValidationMessageText(), passwordValMessage, "Валидация поля 'password' не сработала или сообщение некорректно");
+        softAssert.assertEquals(loginPage.isLoginButtonEnabled(), isLoginButtonEnabled);
+        softAssert.assertAll();
     }
 
     @Test(description = "4.4. Проверка успешного разлогирования")
@@ -79,7 +117,26 @@ public class LoginPageTests extends BaseTest {
         loginPage.login(username, password, USERNAME_DESCRIPTION);
 
         loginPage.logout();
+
         Assert.assertTrue(loginPage.allFieldsAreDisplayed(),
-                "Поля для входа не отображаются после разлогирования");
+                "Поля формы не отображаются после разлогирования");
+        Assert.assertTrue(loginPage.allFieldsAreEmpty(), "Не все поля формы пусты");
+    }
+
+    @Test(description = "Проверка навигации назад в браузере после успешной авторизации")
+    @Story("Навигация")
+    @Severity(SeverityLevel.CRITICAL)
+    public void testNavigationBackAfterSuccessfulLogin() {
+        String username = loginPage.getUsernameFromTip();
+        String password = loginPage.getPasswordFromTip();
+
+        loginPage.login(username, password, USERNAME_DESCRIPTION);
+        waiter.until(ExpectedConditions.visibilityOf(loginPage.getHomeMessage()));
+
+        driver.navigate().back();
+
+        Assert.assertTrue(loginPage.allFieldsAreDisplayed(),
+                "Поля формы не отображаются после навигации назад");
+        Assert.assertTrue(loginPage.allFieldsAreEmpty(), "Не все поля формы пусты");
     }
 }
