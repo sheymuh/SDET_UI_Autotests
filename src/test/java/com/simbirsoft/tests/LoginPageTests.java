@@ -92,7 +92,7 @@ public class LoginPageTests extends BaseTest {
                 "Сообщение об ошибке при авторизации некорректное");
     }
 
-    @Test(dataProvider = "fieldsValidationData", description = "Проверка валидации с корректными и некорректными данными")
+    @Test(dataProvider = "validation", description = "Проверка валидации с корректными и некорректными данными")
     @Story("Валидация")
     @Severity(SeverityLevel.CRITICAL)
     public void testValidationIsCorrect(String username, String password, String usernameDescription,
