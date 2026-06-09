@@ -5,6 +5,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -67,6 +68,7 @@ public class LoginPage extends BasePage {
 
     @Step("Получение элемента сообщения об успешной авторизации")
     public WebElement getHomeMessage() {
+        waiter.until(ExpectedConditions.visibilityOf(homeMessage));
         return homeMessage;
     }
 

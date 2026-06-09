@@ -16,6 +16,7 @@
         <selenium.version>4.28.1</selenium.version>
         <allure.version>2.29.1</allure.version>
         <aspectj.version>1.9.22.1</aspectj.version>
+        <ashot.version>1.5.4</ashot.version>
     </properties>
 
     <dependencies>
@@ -39,6 +40,11 @@
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.yandex.qatools.ashot</groupId>
+            <artifactId>ashot</artifactId>
+            <version>${ashot.version}</version>
         </dependency>
     </dependencies>
 

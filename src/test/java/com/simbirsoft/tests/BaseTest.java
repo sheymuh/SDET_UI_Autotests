@@ -1,10 +1,13 @@
 package com.simbirsoft.tests;
 
 import com.simbirsoft.helpers.ParameterProvider;
+import com.simbirsoft.helpers.ScreenshotHelper;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -46,9 +49,20 @@ public abstract class BaseTest {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown(ITestResult result) {
         if (driver != null) {
+            if (result.getStatus() == ITestResult.FAILURE) {
+                takeScreenshot();
+            }
             driver.quit();
+        }
+    }
+
+    @Step("Выполняется скриншот страницы")
+    private void takeScreenshot() {
+        byte[] screenshot = ScreenshotHelper.takeAShotScreenshot(driver);
+        if (screenshot.length == 0) {
+            ScreenshotHelper.takeScreenshot(driver);
         }
     }
 }
