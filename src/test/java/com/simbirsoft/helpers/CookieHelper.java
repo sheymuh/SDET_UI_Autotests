@@ -7,6 +7,8 @@ import com.simbirsoft.helpers.dto.CookieDto;
 import io.qameta.allure.Step;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,10 +26,11 @@ import java.util.stream.Collectors;
  * <p>
  * Date: 09.06.2026
  */
-public class CookieHelper {
+public final class CookieHelper {
     private static final String COOKIES_FILE_PATH = "src/test/resources/cookies.json";
     private static final ObjectMapper mapper = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT);
+    private static final Logger logger = LoggerFactory.getLogger(CookieHelper.class);
 
     /**
      * Сохраняет cookies из текущей сессии в JSON-файл
@@ -63,8 +66,9 @@ public class CookieHelper {
 
                 try {
                     driver.manage().addCookie(cookie);
+                    logger.info("Добавлен cookie: '{}'", cookie.getName());
                 } catch (Exception e) {
-                    System.err.println("Не удалось добавить " + dto.getName() + ": " + e.getMessage());
+                    logger.warn("Не удалось добавить cookie '{}': {}", dto.getName(), e.getMessage());
                 }
             }
         } catch (IOException ex) {

@@ -58,5 +58,7 @@ public class CookiesTests extends BaseTest {
                     "Авторизация через форму не сработала");
             CookieHelper.saveCookiesInJson(driver);
         }
+
+        Assert.assertTrue(sqlExPage.isUserLoggedIn(), "Пользователь не смог авторизоваться");
     }
 }
