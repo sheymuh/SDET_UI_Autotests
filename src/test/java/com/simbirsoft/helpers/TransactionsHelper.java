@@ -15,7 +15,7 @@ import java.util.List;
  * <p>
  * Date: 04.06.2026
  */
-public class TransactionsHelper {
+public final class TransactionsHelper {
     public static final String CREDIT_TYPE = "Credit";
 
     /**
