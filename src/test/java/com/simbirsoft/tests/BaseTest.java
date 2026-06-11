@@ -7,6 +7,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -27,11 +30,16 @@ import java.util.Map;
  * Date: 28.05.2026
  */
 public abstract class BaseTest {
+    private static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
     protected WebDriver driver;
     protected WebDriverWait waiter;
 
     @BeforeMethod
     public void setUp() {
+        String className = this.getClass().getSimpleName();
+        MDC.put("testClass", className);
+        logger.info("=== Запуск тестового класса: {} ===", className);
+
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--disable-blink-features=AutomationControlled");
@@ -50,6 +58,11 @@ public abstract class BaseTest {
 
     @AfterMethod
     public void tearDown(ITestResult result) {
+        logger.info("=== Завершение теста: {}.{} ===",
+                this.getClass().getSimpleName(), result.getName());
+
+        MDC.clear();
+
         if (driver != null) {
             if (result.getStatus() == ITestResult.FAILURE) {
                 takeScreenshot();
