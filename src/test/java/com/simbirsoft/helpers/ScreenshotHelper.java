@@ -7,7 +7,7 @@ import ru.yandex.qatools.ashot.Screenshot;
 
 import static ru.yandex.qatools.ashot.util.ImageTool.toByteArray;
 
-public class ScreenshotHelper {
+public final class ScreenshotHelper {
     /**
      * Скриншот страницы через aShot
      */

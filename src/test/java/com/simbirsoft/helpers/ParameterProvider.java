@@ -17,7 +17,7 @@ import java.util.Properties;
  * <p>
  * Date: 28.05.2026
  */
-public class ParameterProvider {
+public final class ParameterProvider {
     public static final String PARAMETERS_PATH = "configurations/config.properties";
     private static ParameterProvider instance;
     private final Map<String, String> parameters;

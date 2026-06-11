@@ -15,7 +15,7 @@ import java.util.List;
  * <p>
  * Date: 04.06.2026
  */
-public class StringHelper {
+public final class StringHelper {
 
     /**
      * Находит самое длинное слово в списке строк
