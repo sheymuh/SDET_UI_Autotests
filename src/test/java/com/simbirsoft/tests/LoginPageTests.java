@@ -26,6 +26,8 @@ import org.testng.asserts.SoftAssert;
 public class LoginPageTests extends BaseTest {
     private final String LOGIN_PAGE_URL = ParameterProvider.get("base.url") + "angularjs-protractor/registeration/#/login";
     private final String USERNAME_DESCRIPTION = "some description";
+    private final String SHORT_USERNAME = "oi";
+    private final String SHORT_PASSWORD = "23";
 
     private LoginPage loginPage;
 
@@ -48,7 +50,7 @@ public class LoginPageTests extends BaseTest {
     public Object[][] fieldsValidationData() {
         // { username, password, username description, usernameMessage, passwordMessage, isLoginButtonEnabled }
         return new Object[][] {
-                { "oi", "23", USERNAME_DESCRIPTION, LoginPage.USERNAME_SHORT_MESSAGE, LoginPage.PASSWORD_SHORT_MESSAGE, false },
+                {SHORT_USERNAME, SHORT_PASSWORD, USERNAME_DESCRIPTION, LoginPage.USERNAME_SHORT_MESSAGE, LoginPage.PASSWORD_SHORT_MESSAGE, false },
                 { "", "", "", LoginPage.USERNAME_EMPTY_MESSAGE, LoginPage.PASSWORD_EMPTY_MESSAGE, false },
                 { "!-_. `:", "!-_. `:", USERNAME_DESCRIPTION, null, null, true },
                 { "a".repeat(51), "1".repeat(101), USERNAME_DESCRIPTION, null, null, true},
@@ -104,6 +106,25 @@ public class LoginPageTests extends BaseTest {
         softAssert.assertEquals(loginPage.getUsernameValidationMessageText(), usernameValMessage, "Валидация поля 'username' не сработала или сообщение некорректно");
         softAssert.assertEquals(loginPage.getPasswordValidationMessageText(), passwordValMessage, "Валидация поля 'password' не сработала или сообщение некорректно");
         softAssert.assertEquals(loginPage.isLoginButtonEnabled(), isLoginButtonEnabled);
+        softAssert.assertAll();
+    }
+
+    @Test(description = "Проверка, остается ли валидационная подсказка после снятия фокуса с полей username и password")
+    @Story("Валидация")
+    @Severity(SeverityLevel.MINOR)
+    public void testValidationMessageStayAfterBlur() {
+        SoftAssert softAssert = new SoftAssert();
+
+        loginPage.enterUsername(SHORT_USERNAME);
+        loginPage.blurUsernameField();
+
+        softAssert.assertNotEquals(loginPage.getUsernameValidationMessageText(), null, "Валидационная подсказка пропала после снятия фокуса с поля username");
+
+        loginPage.enterPassword(SHORT_PASSWORD);
+        loginPage.blurPasswordField();
+
+        softAssert.assertNotEquals(loginPage.getPasswordValidationMessageText(), null, "Валидационная подсказка пропала после снятия фокуса с поля password");
+
         softAssert.assertAll();
     }
 

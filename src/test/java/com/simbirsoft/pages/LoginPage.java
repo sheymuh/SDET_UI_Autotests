@@ -1,5 +1,6 @@
 package com.simbirsoft.pages;
 
+import com.simbirsoft.helpers.JsExecutorHelper;
 import io.qameta.allure.Step;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -148,6 +149,32 @@ public class LoginPage extends BasePage {
         }
 
         return "";
+    }
+
+    @Step("Заполение поля username")
+    public LoginPage enterUsername(String username) {
+        usernameField.sendKeys(username);
+
+        return this;
+    }
+
+    @Step("Заполение поля password")
+    public LoginPage enterPassword(String password) {
+        passwordField.sendKeys(password);
+
+        return this;
+    }
+
+    public LoginPage blurUsernameField() {
+        JsExecutorHelper.blurElement(driver, usernameField);
+
+        return this;
+    }
+
+    public LoginPage blurPasswordField() {
+        JsExecutorHelper.blurElement(driver, passwordField);
+
+        return this;
     }
 
     @Step("Авторизация с параметрами: username={username}, password={password}, description={usernameDescription}")
