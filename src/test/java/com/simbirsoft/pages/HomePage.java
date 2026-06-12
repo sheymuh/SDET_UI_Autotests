@@ -2,6 +2,7 @@ package com.simbirsoft.pages;
 
 import com.simbirsoft.components.FooterComponent;
 import com.simbirsoft.components.HeaderComponent;
+import com.simbirsoft.helpers.JsExecutorHelper;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -155,5 +156,10 @@ public class HomePage extends BasePage {
     public boolean hasSlideChanged(String previousSlideTitle) {
         String newSlideTitle = getCurrentSlideTitle();
         return !newSlideTitle.equals(previousSlideTitle);
+    }
+
+
+    public boolean havePageScroll() {
+        return JsExecutorHelper.havePageScroll(driver);
     }
 }

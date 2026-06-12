@@ -107,6 +107,14 @@ public class HomePageTests extends BaseTest {
         Assert.assertTrue(homePage.isNavMenuDisplayed());
     }
 
+    @Test(description = "Проверка наличия скролла на странице")
+    @Feature("Отображение UI компонентов")
+    @Story("Скролл")
+    @Severity(SeverityLevel.BLOCKER)
+    public void testHavePageScroll() {
+        Assert.assertTrue(homePage.havePageScroll(), "На странице отсутствует скролл");
+    }
+
     @Test(description = "3. Проверка перехода по меню навигации на страницу All courses -> Lifetime membership")
     @Feature("Навигация")
     @Story("Навигация на Lifetime Membership")
