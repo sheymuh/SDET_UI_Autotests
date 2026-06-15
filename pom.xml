@@ -13,13 +13,14 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <testng.version>7.10.2</testng.version>
-        <selenium.version>4.28.1</selenium.version>
+        <selenium.version>4.44.0</selenium.version>
         <allure.version>2.29.1</allure.version>
         <aspectj.version>1.9.22.1</aspectj.version>
         <ashot.version>1.5.4</ashot.version>
         <jackson-databind.version>2.21.3</jackson-databind.version>
         <slf4j-api.version>2.0.17</slf4j-api.version>
         <logback-classic.version>1.5.6</logback-classic.version>
+        <suiteXmlFile>src/test/resources/configurations/testng.xml</suiteXmlFile>
     </properties>
 
     <dependencies>
@@ -79,6 +80,9 @@
                     <systemPropertyVariables>
                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
                     </systemPropertyVariables>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                    </suiteXmlFiles>
                 </configuration>
             </plugin>
 

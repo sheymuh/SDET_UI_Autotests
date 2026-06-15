@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="SeleniumGridParallelSuite" parallel="tests" thread-count="2">
+    <test name="HomeAndLoginTests">
+        <classes>
+            <class name="com.simbirsoft.tests.HomePageTests"/>
+            <class name="com.simbirsoft.tests.LoginPageTests"/>
+        </classes>
+    </test>
+    <test name="BankingAppAndCookiesTests">
+        <classes>
+            <class name="com.simbirsoft.tests.BankingAppPageTests"/>
+            <class name="com.simbirsoft.tests.CookiesTests"/>
+        </classes>
+    </test>
+</suite>
