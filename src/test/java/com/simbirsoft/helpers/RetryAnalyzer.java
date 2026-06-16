@@ -15,13 +15,12 @@ import org.testng.ITestResult;
  * Date: 15.06.2026
  */
 public class RetryAnalyzer implements IRetryAnalyzer {
-    int counter = 0;
-    int retryLimit = 2;
+    private int counter = 0;
+    private final int RETRY_LIMIT = 2;
 
     @Override
     public boolean retry(ITestResult iTestResult) {
-        if (counter < retryLimit)
-        {
+        if (counter < RETRY_LIMIT) {
             counter++;
             return true;
         }
