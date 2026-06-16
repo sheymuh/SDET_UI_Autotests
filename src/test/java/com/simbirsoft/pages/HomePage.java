@@ -159,7 +159,7 @@ public class HomePage extends BasePage {
     }
 
 
-    public boolean havePageScroll() {
+    public boolean isPageScrollable() {
         return JsExecutorHelper.havePageScroll(driver);
     }
 }
