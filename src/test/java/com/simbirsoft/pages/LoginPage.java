@@ -151,14 +151,14 @@ public class LoginPage extends BasePage {
         return "";
     }
 
-    @Step("Заполение поля username")
+    @Step("Заполнение поля username")
     public LoginPage enterUsername(String username) {
         usernameField.sendKeys(username);
 
         return this;
     }
 
-    @Step("Заполение поля password")
+    @Step("Заполнение поля password")
     public LoginPage enterPassword(String password) {
         passwordField.sendKeys(password);
 

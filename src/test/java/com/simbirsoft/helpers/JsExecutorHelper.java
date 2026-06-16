@@ -17,8 +17,6 @@ import org.openqa.selenium.WebElement;
  * Date: 11.06.2026
  */
 public final class JsExecutorHelper {
-    private static JavascriptExecutor js;
-
     /**
      * Убирает фокус из элемента
      * @param driver драйвер сессии браузера
@@ -26,9 +24,7 @@ public final class JsExecutorHelper {
      */
     @Step("Убран фокус из элемента: {element}")
     public static void blurElement(WebDriver driver, WebElement element) {
-        js = (JavascriptExecutor) driver;
-
-        js.executeScript("arguments[0].blur();", element);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].blur();", element);
     }
 
     /**
@@ -38,10 +34,8 @@ public final class JsExecutorHelper {
      */
     @Step("Проверка наличия скролла на странице")
     public static boolean havePageScroll(WebDriver driver) {
-        js = (JavascriptExecutor) driver;
-
-        Boolean horizontalPresent = (Boolean) js.executeScript("return document.documentElement.scrollWidth > document.documentElement.clientWidth;");
-        Boolean verticalPresent = (Boolean) js.executeScript("return document.documentElement.scrollHeight > document.documentElement.clientHeight;");
+        Boolean horizontalPresent = (Boolean) ((JavascriptExecutor) driver).executeScript("return document.documentElement.scrollWidth > document.documentElement.clientWidth;");
+        Boolean verticalPresent = (Boolean) ((JavascriptExecutor) driver).executeScript("return document.documentElement.scrollHeight > document.documentElement.clientHeight;");
 
         return Boolean.TRUE.equals(horizontalPresent) || Boolean.TRUE.equals(verticalPresent);
     }

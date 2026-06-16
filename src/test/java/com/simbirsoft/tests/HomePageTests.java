@@ -111,8 +111,8 @@ public class HomePageTests extends BaseTest {
     @Feature("Отображение UI компонентов")
     @Story("Скролл")
     @Severity(SeverityLevel.BLOCKER)
-    public void testHavePageScroll() {
-        Assert.assertTrue(homePage.havePageScroll(), "На странице отсутствует скролл");
+    public void testIsPageScrollable() {
+        Assert.assertTrue(homePage.isPageScrollable(), "На странице отсутствует скролл");
     }
 
     @Test(description = "3. Проверка перехода по меню навигации на страницу All courses -> Lifetime membership")
