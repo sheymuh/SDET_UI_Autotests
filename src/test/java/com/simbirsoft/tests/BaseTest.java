@@ -1,11 +1,12 @@
 package com.simbirsoft.tests;
 
+import com.simbirsoft.drivers.BrowserType;
+import com.simbirsoft.drivers.DriverFactory;
+import com.simbirsoft.drivers.ExecutionMode;
 import com.simbirsoft.helpers.ParameterProvider;
 import com.simbirsoft.helpers.ScreenshotHelper;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,10 @@ import org.slf4j.MDC;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * BaseTest.java
@@ -33,6 +32,7 @@ import java.util.Map;
  */
 public abstract class BaseTest {
     private static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
+
     protected WebDriver driver;
     protected WebDriverWait waiter;
 
@@ -40,28 +40,17 @@ public abstract class BaseTest {
     private static final ThreadLocal<WebDriverWait> WAITER_HOLDER = new ThreadLocal<>();
 
     @BeforeMethod
-    public void setUp() {
+    @Parameters({"browser", "executionMode"})
+    public void setUp(@Optional String browser,
+                      @Optional String executionMode) {
         String className = this.getClass().getSimpleName();
         MDC.put("testClass", className);
         logger.info("=== Запуск тестового класса: {} ===", className);
 
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-        chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
-        chromeOptions.addArguments("--remote-allow-origins=*");
+        BrowserType browserType = BrowserType.valueOf(browser.toUpperCase());
+        ExecutionMode mode = ExecutionMode.valueOf(executionMode.toUpperCase());
 
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("credentials_enable_service", false);
-        prefs.put("profile.password_manager_enabled", false);
-        prefs.put("profile.password_manager_leak_detection", false);
-        chromeOptions.setExperimentalOption("prefs", prefs);
-
-        String gridUrl = ParameterProvider.get("grid.url");
-        try {
-            driver = new RemoteWebDriver(new URL(gridUrl), chromeOptions);
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException("Некорректный URL Grid: " + gridUrl, ex);
-        }
+        driver = DriverFactory.createDriver(browserType, mode);
 
         driver.manage().window().maximize();
         waiter = new WebDriverWait(driver,

@@ -4,16 +4,35 @@
     <listeners>
         <listener class-name="com.simbirsoft.helpers.AnnotationTransformer"/>
     </listeners>
-    <test name="HomeAndLoginTests">
+<!--    <test name="ChromeTests">-->
+<!--        <parameter name="browser" value="chrome"/>-->
+<!--        <parameter name="executionMode" value="local"/>-->
+<!--        <classes>-->
+<!--&lt;!&ndash;            <class name="com.simbirsoft.tests.HomePageTests"/>&ndash;&gt;-->
+<!--            <class name="com.simbirsoft.tests.LoginPageTests"/>-->
+<!--&lt;!&ndash;            <class name="com.simbirsoft.tests.BankingAppPageTests"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <class name="com.simbirsoft.tests.CookiesTests"/>&ndash;&gt;-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="FirefoxTests">-->
+<!--        <parameter name="browser" value="firefox"/>-->
+<!--        <parameter name="executionMode" value="local"/>-->
+<!--        <classes>-->
+<!--            <class name="com.simbirsoft.tests.LoginPageTests"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="EdgeTests">-->
+<!--        <parameter name="browser" value="edge"/>-->
+<!--        <parameter name="executionMode" value="local"/>-->
+<!--        <classes>-->
+<!--            <class name="com.simbirsoft.tests.LoginPageTests"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+    <test name="IETests">
+        <parameter name="browser" value="ie"/>
+        <parameter name="executionMode" value="local"/>
         <classes>
-            <class name="com.simbirsoft.tests.HomePageTests"/>
             <class name="com.simbirsoft.tests.LoginPageTests"/>
-        </classes>
-    </test>
-    <test name="BankingAppAndCookiesTests">
-        <classes>
-            <class name="com.simbirsoft.tests.BankingAppPageTests"/>
-            <class name="com.simbirsoft.tests.CookiesTests"/>
         </classes>
     </test>
 </suite>
