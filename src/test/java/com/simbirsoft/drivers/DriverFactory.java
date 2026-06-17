@@ -11,8 +11,6 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,10 +63,6 @@ public class DriverFactory {
                 EdgeOptions options = (EdgeOptions) DriverOptionsFactory.createOptions(BrowserType.EDGE);
                 yield new EdgeDriver(options);
             }
-            case IE -> { // используем IE mode в Edge
-                InternetExplorerOptions options = (InternetExplorerOptions) DriverOptionsFactory.createOptions(BrowserType.IE);
-                yield new InternetExplorerDriver(options);
-            }
         };
     }
 
@@ -87,18 +81,5 @@ public class DriverFactory {
         } catch (MalformedURLException e) {
             throw new RuntimeException("Некорректный URL Grid: " + gridUrl, e);
         }
-    }
-
-    /**
-     * Создание WebDriver с параметрами по умолчанию
-     */
-    public static WebDriver createDefaultDriver() {
-        String browser = ParameterProvider.get("browser");
-        String mode = ParameterProvider.get("execution.mode");
-
-        return createDriver(
-                BrowserType.valueOf(browser.toUpperCase()),
-                ExecutionMode.valueOf(mode.toUpperCase())
-        );
     }
 }

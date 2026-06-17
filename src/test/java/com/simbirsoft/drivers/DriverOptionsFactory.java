@@ -1,11 +1,9 @@
 package com.simbirsoft.drivers;
 
 import org.openqa.selenium.MutableCapabilities;
-import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.ie.InternetExplorerOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +25,6 @@ public class DriverOptionsFactory {
             case CHROME -> createChromeOptions();
             case FIREFOX -> createFirefoxOptions();
             case EDGE -> createEdgeOptions();
-            case IE -> createEdgeIEModeOptions();
         };
     }
 
@@ -71,20 +68,6 @@ public class DriverOptionsFactory {
         prefs.put("profile.password_manager_enabled", false);
         prefs.put("profile.password_manager_leak_detection", false);
         options.setExperimentalOption("prefs", prefs);
-
-        return options;
-    }
-
-    private static InternetExplorerOptions createEdgeIEModeOptions() {
-        InternetExplorerOptions options = new InternetExplorerOptions();
-
-        // Подключается к Edge в IE Mode
-//        options.attachToEdgeChrome();
-//        options.withEdgeExecutablePath("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe");
-        options.ignoreZoomSettings();
-        options.introduceFlakinessByIgnoringSecurityDomains();
-        options.enablePersistentHovering();
-//        options.requireWindowFocus();
 
         return options;
     }
