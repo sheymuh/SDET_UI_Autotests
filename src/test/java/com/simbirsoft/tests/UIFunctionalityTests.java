@@ -56,4 +56,22 @@ public class UIFunctionalityTests extends BaseTest {
         windowHandles = driver.getWindowHandles().toArray();
         Assert.assertEquals(windowHandles.length, 3, "Третья вкладка не открылась");
     }
+
+    @Test(description = "Проверка открытия новых вкладок и переключения между ними")
+    @Feature("Новые вкладки")
+    @Story("Переключение между вкладками")
+    @Severity(SeverityLevel.MINOR)
+    public void testOpenNewTabs() {
+        framesAndWindowsPage = new FramesAndWindowsPage(driver, waiter);
+        driver.get(FRAMES_AND_WINDOWS_PAGE_URL);
+
+        framesAndWindowsPage.waitForDemoFrame();
+        framesAndWindowsPage.clickNewTabLink();
+        Object[] windowHandles = driver.getWindowHandles().toArray();
+        driver.switchTo().window((String) windowHandles[1]);
+
+        framesAndWindowsPage.clickNewTabLink();
+        windowHandles = driver.getWindowHandles().toArray();
+        Assert.assertEquals(windowHandles.length, 3, "Третья вкладка не открылась");
+    }
 }
