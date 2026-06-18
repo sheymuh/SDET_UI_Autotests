@@ -7,6 +7,17 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * FramesAndWindowsPage.java
+ * <p>
+ * Page Object для страницы работы с вкладками и окнами сайта Way2Automation
+ * <p>
+ * Copyright (c) 2026 Way2Automation. All Rights Reserved.
+ * <p>
+ * Author: Sheimukhov Andrei
+ * <p>
+ * Date: 18.06.2026
+ */
 public class FramesAndWindowsPage extends BasePage {
     @FindBy(css = "div#example-1-tab-1 iframe.demo-frame")
     private WebElement demoFrame;

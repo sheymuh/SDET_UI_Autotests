@@ -1,9 +1,11 @@
 package com.simbirsoft.tests;
 
 import com.simbirsoft.helpers.ParameterProvider;
+import com.simbirsoft.pages.AlertPage;
 import com.simbirsoft.pages.DroppablePage;
 import com.simbirsoft.pages.FramesAndWindowsPage;
 import io.qameta.allure.*;
+import org.openqa.selenium.Alert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -22,9 +24,13 @@ import org.testng.annotations.Test;
 public class UIFunctionalityTests extends BaseTest {
     private final String DROPPABLE_PAGE_URL = ParameterProvider.get("base.url") + "way2auto_jquery/droppable.php";
     private final String FRAMES_AND_WINDOWS_PAGE_URL = ParameterProvider.get("base.url") + "way2auto_jquery/frames-and-windows.php";
+    private final String ALERT_PAGE_URL = ParameterProvider.get("base.url") + "way2auto_jquery/alert.php";
+
+    private final String INPUT_ALERT_TEXT = "piu piu";
 
     private DroppablePage droppablePage;
     private FramesAndWindowsPage framesAndWindowsPage;
+    private AlertPage alertPage;
 
     @Test(description = "Проверка изменения текста droppable элемента после перетаскивания")
     @Feature("Drag and Drop")
@@ -73,5 +79,25 @@ public class UIFunctionalityTests extends BaseTest {
         framesAndWindowsPage.clickNewTabLink();
         windowHandles = driver.getWindowHandles().toArray();
         Assert.assertEquals(windowHandles.length, 3, "Третья вкладка не открылась");
+    }
+
+    @Test(description = "Проверка, применился ли текст из Input Alert")
+    @Feature("InputAlert")
+    @Story("Вывод сообщения с текстом из Input Alert")
+    @Severity(SeverityLevel.MINOR)
+    public void testInputTextInAlertIsApplied() {
+        alertPage = new AlertPage(driver, waiter);
+        driver.get(ALERT_PAGE_URL);
+
+        alertPage.clickInputAlertTab();
+        alertPage.clickInputBoxButton();
+
+        Alert inputAlert = driver.switchTo().alert();
+        inputAlert.sendKeys(INPUT_ALERT_TEXT);
+        inputAlert.accept();
+
+        String helloMessage = "Hello " + INPUT_ALERT_TEXT + "! How are you today?";
+
+        Assert.assertEquals(alertPage.getHelloMessageText(), helloMessage, "Текст из Input Alert не применился");
     }
 }
