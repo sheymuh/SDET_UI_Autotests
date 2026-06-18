@@ -18,6 +18,16 @@ import org.openqa.selenium.WebElement;
  */
 public final class JsExecutorHelper {
     /**
+     * Скроллит до элемента
+     * @param driver драйвер сессии браузера
+     * @param element элемент, до которого скроллит
+     */
+    @Step("Скролл до элемента: {element}")
+    public static void scrollIntoElementView(WebDriver driver, WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
+    /**
      * Убирает фокус из элемента
      * @param driver драйвер сессии браузера
      * @param element элемент, с которого убирается фокус
