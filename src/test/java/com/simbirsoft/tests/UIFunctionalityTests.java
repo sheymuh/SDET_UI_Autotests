@@ -37,6 +37,6 @@ public class UIFunctionalityTests extends BaseTest {
     public void testDragAndDropChangeElementText() {
         droppablePage.dragAndDrop();
 
-        Assert.assertEquals(droppablePage.getDroppableElementText(), "Dropped!", "Текст droppable элемента не изменился");
+        Assert.assertEquals(droppablePage.getDroppableElementText(), DroppablePage.DROPPED_MESSAGE, "Текст droppable элемента не изменился");
     }
 }

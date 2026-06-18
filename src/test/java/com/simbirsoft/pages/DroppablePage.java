@@ -22,6 +22,8 @@ import java.util.List;
  * Date: 18.06.2026
  */
 public class DroppablePage extends BasePage {
+    public static final String DROPPED_MESSAGE = "Dropped!";
+
     @FindBy(css = "div#example-1-tab-1 iframe.demo-frame")
     private WebElement demoFrame;
 
