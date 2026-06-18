@@ -2,10 +2,13 @@ package com.simbirsoft.tests;
 
 import com.simbirsoft.helpers.ParameterProvider;
 import com.simbirsoft.pages.AlertPage;
+import com.simbirsoft.pages.AuthPage;
 import com.simbirsoft.pages.DroppablePage;
 import com.simbirsoft.pages.FramesAndWindowsPage;
 import io.qameta.allure.*;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.HasAuthentication;
+import org.openqa.selenium.UsernameAndPassword;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -25,12 +28,15 @@ public class UIFunctionalityTests extends BaseTest {
     private final String DROPPABLE_PAGE_URL = ParameterProvider.get("base.url") + "way2auto_jquery/droppable.php";
     private final String FRAMES_AND_WINDOWS_PAGE_URL = ParameterProvider.get("base.url") + "way2auto_jquery/frames-and-windows.php";
     private final String ALERT_PAGE_URL = ParameterProvider.get("base.url") + "way2auto_jquery/alert.php";
+    private final String AUTH_PAGE_URL = ParameterProvider.get("auth.url");
 
     private final String INPUT_ALERT_TEXT = "piu piu";
+    private final String LOGIN_AND_PASSWORD = "httpwatch";
 
     private DroppablePage droppablePage;
     private FramesAndWindowsPage framesAndWindowsPage;
     private AlertPage alertPage;
+    private AuthPage authPage;
 
     @Test(description = "Проверка изменения текста droppable элемента после перетаскивания")
     @Feature("Drag and Drop")
@@ -99,5 +105,19 @@ public class UIFunctionalityTests extends BaseTest {
         String helloMessage = "Hello " + INPUT_ALERT_TEXT + "! How are you today?";
 
         Assert.assertEquals(alertPage.getHelloMessageText(), helloMessage, "Текст из Input Alert не применился");
+    }
+
+    @Test(description = "Проверка, появилось ли изображение после успешной авторизации")
+    @Feature("Авторизация")
+    @Story("Успешная авторизация")
+    @Severity(SeverityLevel.NORMAL)
+    public void testCorrectAuthGetDisplayImage() {
+        authPage = new AuthPage(driver, waiter);
+        driver.get(AUTH_PAGE_URL);
+
+        ((HasAuthentication)driver).register(UsernameAndPassword.of(LOGIN_AND_PASSWORD, LOGIN_AND_PASSWORD));
+        authPage.clickDisplayImageButton();
+
+        Assert.assertNotNull(authPage.getAuthenticatedImage().getAttribute("src"), "Изображение не появилось после успешной авторизации");
     }
 }
