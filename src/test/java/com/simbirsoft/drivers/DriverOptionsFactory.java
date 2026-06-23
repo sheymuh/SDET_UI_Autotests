@@ -35,6 +35,7 @@ public class DriverOptionsFactory {
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
+        options.addArguments("--headless=new");
 
         // Настройки для отключения сохранения паролей
         Map<String, Object> prefs = new HashMap<>();
@@ -52,6 +53,7 @@ public class DriverOptionsFactory {
         options.addPreference("dom.push.enabled", false);
         options.addPreference("signon.rememberSignons", false);
         options.addPreference("network.http.use-cache", false);
+        options.addArguments("--headless");
         return options;
     }
 
@@ -62,6 +64,7 @@ public class DriverOptionsFactory {
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
+        options.addArguments("--headless=new");
 
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("credentials_enable_service", false);
