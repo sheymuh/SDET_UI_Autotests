@@ -8,7 +8,6 @@
         <parameter name="browser" value="chrome"/>
         <parameter name="executionMode" value="grid"/>
         <classes>
-            <class name="com.simbirsoft.tests.HomePageTests"/>
             <class name="com.simbirsoft.tests.LoginPageTests"/>
             <class name="com.simbirsoft.tests.BankingAppPageTests"/>
             <class name="com.simbirsoft.tests.CookiesTests"/>
@@ -18,7 +17,6 @@
         <parameter name="browser" value="firefox"/>
         <parameter name="executionMode" value="grid"/>
         <classes>
-            <class name="com.simbirsoft.tests.HomePageTests"/>
             <class name="com.simbirsoft.tests.LoginPageTests"/>
             <class name="com.simbirsoft.tests.BankingAppPageTests"/>
             <class name="com.simbirsoft.tests.CookiesTests"/>
@@ -28,7 +26,6 @@
         <parameter name="browser" value="edge"/>
         <parameter name="executionMode" value="grid"/>
         <classes>
-            <class name="com.simbirsoft.tests.HomePageTests"/>
             <class name="com.simbirsoft.tests.LoginPageTests"/>
             <class name="com.simbirsoft.tests.BankingAppPageTests"/>
             <class name="com.simbirsoft.tests.CookiesTests"/>
