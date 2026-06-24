@@ -7,7 +7,7 @@ pipeline {
         stage('Start Grid') {
             steps {
                 echo 'Starting Selenium Grid...'
-                bat 'src\\test\\resources\\scripts\\start-grid-standalone.bat'
+                bat 'start /B src\\test\\resources\\scripts\\start-grid-standalone.bat'
             }
         }
 
@@ -22,7 +22,7 @@ pipeline {
     post {
         always {
             echo 'Stopping Selenium Grid...'
-            bat 'src\\test\\resources\\scripts\\stop-grid.bat'
+            bat 'start /B src\\test\\resources\\scripts\\stop-grid.bat'
         }
     }
 }
