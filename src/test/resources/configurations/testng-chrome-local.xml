@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="ChromeLocalTests">
+    <listeners>
+        <listener class-name="com.simbirsoft.helpers.AnnotationTransformer"/>
+    </listeners>
+    <test name="ChromeTests">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="executionMode" value="local"/>
+        <classes>
+            <class name="com.simbirsoft.tests.LoginPageTests"/>
+        </classes>
+    </test>
+</suite>
