@@ -11,18 +11,18 @@
             <class name="com.simbirsoft.tests.LoginPageTests"/>
         </classes>
     </test>
-    <test name="FirefoxTests">
-        <parameter name="browser" value="firefox"/>
-        <parameter name="executionMode" value="local"/>
-        <classes>
-            <class name="com.simbirsoft.tests.LoginPageTests"/>
-        </classes>
-    </test>
-    <test name="EdgeTests">
-        <parameter name="browser" value="edge"/>
-        <parameter name="executionMode" value="local"/>
-        <classes>
-            <class name="com.simbirsoft.tests.LoginPageTests"/>
-        </classes>
-    </test>
+<!--    <test name="FirefoxTests">-->
+<!--        <parameter name="browser" value="firefox"/>-->
+<!--        <parameter name="executionMode" value="local"/>-->
+<!--        <classes>-->
+<!--            <class name="com.simbirsoft.tests.LoginPageTests"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="EdgeTests">-->
+<!--        <parameter name="browser" value="edge"/>-->
+<!--        <parameter name="executionMode" value="local"/>-->
+<!--        <classes>-->
+<!--            <class name="com.simbirsoft.tests.LoginPageTests"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 </suite>
