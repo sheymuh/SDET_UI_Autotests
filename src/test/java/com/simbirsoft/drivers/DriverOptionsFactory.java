@@ -30,6 +30,16 @@ public class DriverOptionsFactory {
 
     private static ChromeOptions createChromeOptions() {
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--window-size=1920,1080");
+
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--ignore-certificate-errors");
+
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--disable-blink-features=AutomationControlled");
         options.addArguments("--remote-allow-origins=*");
@@ -48,6 +58,16 @@ public class DriverOptionsFactory {
 
     private static FirefoxOptions createFirefoxOptions() {
         FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless");
+        options.addArguments("--window-size=1920,1080");
+        options.addArguments("--no-sandbox");
+
+        options.setCapability("marionette", true);
+        options.setCapability("acceptInsecureCerts", true);
+
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--ignore-certificate-errors");
+
         options.addPreference("dom.webnotifications.enabled", false);
         options.addPreference("dom.push.enabled", false);
         options.addPreference("signon.rememberSignons", false);
@@ -57,6 +77,16 @@ public class DriverOptionsFactory {
 
     private static EdgeOptions createEdgeOptions() {
         EdgeOptions options = new EdgeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--window-size=1920,1080");
+
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--ignore-certificate-errors");
+
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--disable-blink-features=AutomationControlled");
         options.addArguments("--remote-allow-origins=*");

@@ -15,9 +15,9 @@ if not exist %SELENIUM_JAR% (
 
 echo [INFO] Запуск Standalone Grid
 echo [INFO] Консоль: http://localhost:4444/ui
-echo [INFO] max-sessions=2
+echo [INFO] max-sessions=5
 echo.
 
-java -jar %SELENIUM_JAR% standalone --max-sessions 2 --session-timeout 300
+java -jar %SELENIUM_JAR% standalone --max-sessions 5 --session-timeout 300
 
 pause
