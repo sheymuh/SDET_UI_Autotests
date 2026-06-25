@@ -4,12 +4,12 @@ pipeline {
         maven 'Maven'
     }
     stages {
-        stage('Start Grid') {
-            steps {
-                echo 'Starting Selenium Grid...'
-                bat 'start /B src\\test\\resources\\scripts\\start-grid-standalone.bat'
-            }
-        }
+//         stage('Start Grid') {
+//             steps {
+//                 echo 'Starting Selenium Grid...'
+//                 bat 'start /B src\\test\\resources\\scripts\\start-grid-standalone.bat'
+//             }
+//         }
 
         stage('Run Tests') {
             steps {
@@ -19,10 +19,10 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            echo 'Stopping Selenium Grid...'
-            bat 'start /B src\\test\\resources\\scripts\\stop-grid.bat'
-        }
-    }
+//     post {
+//         always {
+//             echo 'Stopping Selenium Grid...'
+//             bat 'start /B src\\test\\resources\\scripts\\stop-grid.bat'
+//         }
+//     }
 }
