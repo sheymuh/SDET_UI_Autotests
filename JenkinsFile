@@ -18,25 +18,26 @@ pipeline {
                     bat 'powershell -Command "Compress-Archive -Path allure-report\\* -DestinationPath allure-report.zip -Force"'
 
                     script {
+                        def total = 0
+                        def passed = 0
+                        def failed = 0
+                        def skipped = 0
+
                         try {
                             // Читаем XML отчет TestNG
-                            def reportFiles = findFiles(glob: 'target/surefire-reports/testng-results.xml')
-                            if (reportFiles.size() > 0) {
-                                def content = readFile(file: reportFiles[0].path)
+                            def xmlContent = readFile('target/surefire-reports/testng-results.xml')
 
-                                // Парсим XML через регулярные выражения
-                                def totalMatch = (content =~ 'total="(\\d+)"')
-                                def failedMatch = (content =~ 'failed="(\\d+)"')
-                                def skippedMatch = (content =~ 'skipped="(\\d+)"')
+                            // Парсим XML через регулярные выражения
+                            def totalMatch = (xmlContent =~ 'total="(\\d+)"')
+                            def failedMatch = (xmlContent =~ 'failed="(\\d+)"')
+                            def skippedMatch = (xmlContent =~ 'skipped="(\\d+)"')
 
-                                if (totalMatch) total = totalMatch[0][1] as int
-                                if (failedMatch) failed = failedMatch[0][1] as int
-                                if (skippedMatch) skipped = skippedMatch[0][1] as int
-                                passed = total - failed - skipped
+                            if (totalMatch) total = totalMatch[0][1] as int
+                            if (failedMatch) failed = failedMatch[0][1] as int
+                            if (skippedMatch) skipped = skippedMatch[0][1] as int
+                            passed = total - failed - skipped
 
-                                echo "Stats from XML: Total=${total}, Passed=${passed}, Failed=${failed}, Skipped=${skipped}"
-                            } else {
-                                echo "testng-results.xml not found"
+                            echo "Stats from XML: Total=${total}, Passed=${passed}, Failed=${failed}, Skipped=${skipped}"
                             }
                         } catch (Exception e) {
                             echo "Could not parse XML: ${e.getMessage()}"
