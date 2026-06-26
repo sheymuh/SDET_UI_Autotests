@@ -15,7 +15,7 @@ pipeline {
                     junit testResults: 'target/surefire-reports/*.xml'
 
                     allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
-                    bat 'zip -r allure-report.zip allure-report'
+                    zip(zipFile: 'allure-report.zip', archive: false, dir: 'allure-report')
 
                     script {
                         if(fileExists('allure-report.zip')){
