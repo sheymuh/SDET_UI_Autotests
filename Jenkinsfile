@@ -12,7 +12,33 @@ pipeline {
             }
             post {
                 always {
+                    junit testResults: 'target/surefire-reports/*.xml', testName: 'TestNG tests results'
+
                     allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+                    bat 'zip -r allure-report.zip allure-report'
+
+                    if(fileExists('allure-report.zip')){
+                            def summary = testSummary 'TestNG tests results'
+
+                            emailext(
+                                to: 'asejmuhov@gmail.com',
+                                subject: 'Jenkins Report: ${env.JOB_NAME} #${env.BUILD_NUMBER}"- ${currentBuild.currentResult}',
+                                body: """
+                                    <h2>Test Execution Summary</h2>
+                                    <p><b>Project:</b> ${env.JOB_NAME}</p>
+                                    <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+                                    <p><b>Result:</b> ${currentBuild.currentResult}</p>
+                                    <p><b>Total Tests:</b> ${summary.totalCount}</p>
+                                    <p><b>Passed:</b> ${summary.passCount}</p>
+                                    <p><b>Failed:</b> ${summary.failCount}</p>
+                                    <p><b>Skipped:</b> ${summary.skipCount}</p>
+                                """,
+                                attachmentsPattern: 'allure-report.zip',
+                                mimeType: 'text/html'
+                            )
+                    } else {
+                        echo("COULD NOT FIND FILE TO ATTACH")
+                    }
                 }
             }
         }
