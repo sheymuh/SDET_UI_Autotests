@@ -38,7 +38,6 @@ pipeline {
                             passed = total - failed - skipped
 
                             echo "Stats from XML: Total=${total}, Passed=${passed}, Failed=${failed}, Skipped=${skipped}"
-                            }
                         } catch (Exception e) {
                             echo "Could not parse XML: ${e.getMessage()}"
                         }
