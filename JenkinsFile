@@ -43,8 +43,9 @@ pipeline {
                         }
 
                         emailext(
+                            from: 'Jenkins'
                             to: 'asejmuhov@gmail.com',
-                            subject: 'Jenkins Report: ${env.JOB_NAME} #${env.BUILD_NUMBER}"- ${currentBuild.currentResult}',
+                            subject: "Jenkins Report: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
                             body: """
                                 <h2>Test Execution Summary</h2>
                                 <p><b>Project:</b> ${env.JOB_NAME}</p>
