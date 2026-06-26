@@ -12,13 +12,14 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: 'target/surefire-reports/*.xml', testName: 'TestNG tests results'
+                    junit testResults: 'target/surefire-reports/*.xml'
 
                     allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
                     bat 'zip -r allure-report.zip allure-report'
 
-                    if(fileExists('allure-report.zip')){
-                            def summary = testSummary 'TestNG tests results'
+                    script {
+                        if(fileExists('allure-report.zip')){
+                            def summary = testSummary 'JUnit'
 
                             emailext(
                                 to: 'asejmuhov@gmail.com',
@@ -36,8 +37,9 @@ pipeline {
                                 attachmentsPattern: 'allure-report.zip',
                                 mimeType: 'text/html'
                             )
-                    } else {
-                        echo("COULD NOT FIND FILE TO ATTACH")
+                        } else {
+                            echo("COULD NOT FIND FILE TO ATTACH")
+                        }
                     }
                 }
             }
