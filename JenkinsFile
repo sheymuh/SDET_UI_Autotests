@@ -15,7 +15,7 @@ pipeline {
                     junit testResults: 'target/surefire-reports/*.xml'
 
                     allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
-                    zip(zipFile: 'allure-report.zip', archive: false, dir: 'allure-report')
+                    bat 'powershell -Command "Compress-Archive -Path allure-report\\* -DestinationPath allure-report.zip -Force"'
 
                     script {
                         if(fileExists('allure-report.zip')){
