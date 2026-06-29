@@ -12,32 +12,53 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: 'target/surefire-reports/*.xml', testName: 'TestNG tests results'
+                    junit testResults: 'target/surefire-reports/*.xml'
 
                     allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
-                    bat 'zip -r allure-report.zip allure-report'
+                    bat 'powershell -Command "Compress-Archive -Path allure-report\\* -DestinationPath allure-report.zip -Force"'
 
-                    if(fileExists('allure-report.zip')){
-                            def summary = testSummary 'TestNG tests results'
+                    script {
+                        def total = 0
+                        def passed = 0
+                        def failed = 0
+                        def skipped = 0
 
-                            emailext(
-                                to: 'asejmuhov@gmail.com',
-                                subject: 'Jenkins Report: ${env.JOB_NAME} #${env.BUILD_NUMBER}"- ${currentBuild.currentResult}',
-                                body: """
-                                    <h2>Test Execution Summary</h2>
-                                    <p><b>Project:</b> ${env.JOB_NAME}</p>
-                                    <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
-                                    <p><b>Result:</b> ${currentBuild.currentResult}</p>
-                                    <p><b>Total Tests:</b> ${summary.totalCount}</p>
-                                    <p><b>Passed:</b> ${summary.passCount}</p>
-                                    <p><b>Failed:</b> ${summary.failCount}</p>
-                                    <p><b>Skipped:</b> ${summary.skipCount}</p>
-                                """,
-                                attachmentsPattern: 'allure-report.zip',
-                                mimeType: 'text/html'
-                            )
-                    } else {
-                        echo("COULD NOT FIND FILE TO ATTACH")
+                        try {
+                            // Читаем XML отчет TestNG
+                            def xmlContent = readFile('target/surefire-reports/testng-results.xml')
+
+                            // Парсим XML через регулярные выражения
+                            def totalMatch = (xmlContent =~ 'total="(\\d+)"')
+                            def failedMatch = (xmlContent =~ 'failed="(\\d+)"')
+                            def skippedMatch = (xmlContent =~ 'skipped="(\\d+)"')
+
+                            if (totalMatch) total = totalMatch[0][1] as int
+                            if (failedMatch) failed = failedMatch[0][1] as int
+                            if (skippedMatch) skipped = skippedMatch[0][1] as int
+                            passed = total - failed - skipped
+
+                            echo "Stats from XML: Total=${total}, Passed=${passed}, Failed=${failed}, Skipped=${skipped}"
+                        } catch (Exception e) {
+                            echo "Could not parse XML: ${e.getMessage()}"
+                        }
+
+                        emailext(
+                            from: 'Jenkins',
+                            to: 'asejmuhov@gmail.com',
+                            subject: "Jenkins Report: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                            body: """
+                                <h2>Test Execution Summary</h2>
+                                <p><b>Project:</b> ${env.JOB_NAME}</p>
+                                <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+                                <p><b>Result:</b> ${currentBuild.currentResult}</p>
+                                <p><b>Total Tests:</b> ${total}</p>
+                                <p><b>Passed:</b> ${passed}</p>
+                                <p><b>Failed:</b> ${failed}</p>
+                                <p><b>Skipped:</b> ${skipped}</p>
+                            """,
+                            attachmentsPattern: 'allure-report.zip',
+                            mimeType: 'text/html'
+                        )
                     }
                 }
             }
