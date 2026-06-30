@@ -11,11 +11,12 @@ pipeline {
                     mkdir -p test-results
                     mkdir -p selenoid/logs
                 '''
+        }
         stage('Start Selenoid') {
-                    steps {
-                        bat 'docker-compose up -d selenoid selenoid-ui'
-                    }
-                }
+            steps {
+                bat 'docker-compose up -d selenoid selenoid-ui'
+            }
+        }
         stage('Run Tests') {
             steps {
                 bat 'docker-compose up -d test-runner'
