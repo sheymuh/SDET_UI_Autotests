@@ -1,0 +1,33 @@
+{
+  "chrome": {
+    "default": "149.0",
+    "versions": {
+      "122.0": {
+        "image": "selenoid/vnc:chrome_149.0",
+        "port": "4444",
+        "path": "/",
+        "env": ["TZ=Europe/Moscow"]
+      }
+    }
+  },
+  "firefox": {
+    "default": "152.0",
+    "versions": {
+      "122.0": {
+        "image": "selenoid/vnc:firefox_152.0",
+        "port": "4444",
+        "path": "/wd/hub"
+      }
+    }
+  },
+  "edge": {
+    "default": "149.0",
+    "versions": {
+      "122.0": {
+        "image": "selenoid/vnc:edge_49.0",
+        "port": "4444",
+        "path": "/"
+      }
+    }
+  }
+}

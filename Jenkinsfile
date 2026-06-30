@@ -5,10 +5,20 @@ pipeline {
         allure 'Allure'
     }
     stages {
+        stage('Prepare') {
+            steps {
+                bat '''
+                    mkdir -p test-results
+                    mkdir -p selenoid/logs
+                '''
+        stage('Start Selenoid') {
+                    steps {
+                        bat 'docker-compose up -d selenoid selenoid-ui'
+                    }
+                }
         stage('Run Tests') {
             steps {
-                echo 'Running tests...'
-                bat 'mvn clean test -DsuiteXmlFile="src\\test\\resources\\configurations\\testng-chrome-local.xml"'
+                bat 'docker-compose up -d test-runner'
             }
             post {
                 always {
@@ -62,6 +72,11 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+    post {
+        always {
+            bat 'docker-compose down'
         }
     }
 }
