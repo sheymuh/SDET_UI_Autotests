@@ -11,6 +11,7 @@ pipeline {
                     mkdir -p test-results
                     mkdir -p selenoid/logs
                 '''
+            }
         }
         stage('Start Selenoid') {
             steps {
