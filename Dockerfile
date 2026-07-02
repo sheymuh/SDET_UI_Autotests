@@ -21,4 +21,4 @@ ENV MAVEN_OPTS="-Dmaven.repo.local=/root/.m2/repository"
 
 RUN mvn clean compile
 
-CMD mvn test -Dsurefire.suiteXmlFiles=src/test/resources/configurations/${suiteFile} -e
+CMD mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/configurations/${suiteFile} -e
