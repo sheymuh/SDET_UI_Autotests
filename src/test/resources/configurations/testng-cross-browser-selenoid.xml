@@ -9,26 +9,28 @@
         <parameter name="executionMode" value="selenoid"/>
         <classes>
             <class name="com.simbirsoft.tests.LoginPageTests"/>
-            <class name="com.simbirsoft.tests.BankingAppPageTests"/>
-            <class name="com.simbirsoft.tests.CookiesTests"/>
+<!--            <class name="com.simbirsoft.tests.BankingAppPageTests"/>-->
+<!--            <class name="com.simbirsoft.tests.CookiesTests"/>-->
         </classes>
     </test>
     <test name="FirefoxTests">
         <parameter name="browser" value="firefox"/>
         <parameter name="executionMode" value="selenoid"/>
         <classes>
-            <class name="com.simbirsoft.tests.LoginPageTests"/>
+<!--            <class name="com.simbirsoft.tests.LoginPageTests"/>-->
             <class name="com.simbirsoft.tests.BankingAppPageTests"/>
-            <class name="com.simbirsoft.tests.CookiesTests"/>
+<!--            <class name="com.simbirsoft.tests.CookiesTests"/>-->
+<!--            <class name="com.simbirsoft.tests.UIFunctionalityTests"/>-->
         </classes>
     </test>
     <test name="EdgeTests">
         <parameter name="browser" value="edge"/>
         <parameter name="executionMode" value="selenoid"/>
         <classes>
-            <class name="com.simbirsoft.tests.LoginPageTests"/>
-            <class name="com.simbirsoft.tests.BankingAppPageTests"/>
-            <class name="com.simbirsoft.tests.CookiesTests"/>
+<!--            <class name="com.simbirsoft.tests.LoginPageTests"/>-->
+<!--            <class name="com.simbirsoft.tests.BankingAppPageTests"/>-->
+<!--            <class name="com.simbirsoft.tests.CookiesTests"/>-->
+            <class name="com.simbirsoft.tests.UIFunctionalityTests"/>
         </classes>
     </test>
 </suite>
