@@ -18,6 +18,12 @@ pipeline {
             }
             post {
                 always {
+                    script {
+                        bat 'docker cp test-runner:/ui-autotests/target/surefire-reports ./target/surefire-reports || echo "No surefire reports"'
+                        bat 'docker cp test-runner:/ui-autotests/target/allure-results ./target/allure-results || echo "No allure results"'
+                        archiveArtifacts artifacts: 'test-runner.log', allowEmptyArchive: true
+                    }
+
                     junit testResults: 'target/surefire-reports/*.xml'
 
                     allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
