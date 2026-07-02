@@ -10,19 +10,16 @@ pipeline {
                 bat 'docker-compose up -d browser-downloader selenoid selenoid-ui'
             }
         }
-        stage('Run Tests') {
+        stage('Clean target and Run Tests') {
             steps {
+                bat 'if exist target rmdir /s /q target'
                 bat 'docker-compose build'
                 bat 'docker-compose up -d test-runner'
                 bat 'docker wait test-runner || echo "Container finished"'
             }
             post {
                 always {
-                    script {
-                        bat 'docker cp test-runner:/ui-autotests/target/surefire-reports ./target || echo "No surefire reports"'
-                        bat 'docker cp test-runner:/ui-autotests/target/allure-results ./target || echo "No allure results"'
-                        archiveArtifacts artifacts: 'test-runner.log', allowEmptyArchive: true
-                    }
+                    bat 'docker cp test-runner:/ui-autotests/target .'
 
                     junit testResults: 'target/surefire-reports/*.xml'
 
