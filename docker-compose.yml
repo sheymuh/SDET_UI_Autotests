@@ -66,11 +66,11 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./selenoid/test-results:/app/target/surefire-reports
-      - ./selenoid/test-results/allure:/app/target/allure-results
+      - ./selenoid/test-results/surefire:/ui-autotests/target/surefire-reports
+      - ./selenoid/test-results/allure:/ui-autotests/target/allure-results
       - maven-cache:/root/.m2/repository
-      - ./src:/app/src:ro
-      - ./pom.xml:/app/pom.xml:ro
+      - ./src:/ui-autotests/src:ro
+      - ./pom.xml:/ui-autotests/pom.xml:ro
     environment:
       - suiteFile=testng-cross-browser-selenoid.xml
     depends_on:
