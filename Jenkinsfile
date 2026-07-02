@@ -12,7 +12,8 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                bat 'docker-compose run -e suiteFile=testng-cross-browser-selenoid.xml -d test-runner'
+                bat 'docker-compose build'
+                bat 'docker-compose up -d test-runner'
                 bat 'docker wait test-runner || echo "Container finished"'
             }
 //             post {
