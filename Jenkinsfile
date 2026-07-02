@@ -16,12 +16,12 @@ pipeline {
                 bat 'docker-compose up -d test-runner'
                 bat 'docker wait test-runner || echo "Container finished"'
             }
-//             post {
-//                 always {
-//                     junit testResults: 'target/surefire-reports/*.xml'
-//
-//                     allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
-//                     bat 'powershell -Command "Compress-Archive -Path allure-report\\* -DestinationPath allure-report.zip -Force"'
+            post {
+                always {
+                    junit testResults: 'target/surefire-reports/*.xml'
+
+                    allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+                    bat 'powershell -Command "Compress-Archive -Path allure-report\\* -DestinationPath allure-report.zip -Force"'
 //
 //                     script {
 //                         def total = 0
@@ -66,8 +66,8 @@ pipeline {
 //                             mimeType: 'text/html'
 //                         )
 //                     }
-//                 }
-//             }
+                }
+            }
         }
     }
     post {
