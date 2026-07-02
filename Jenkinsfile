@@ -19,8 +19,8 @@ pipeline {
             post {
                 always {
                     script {
-                        bat 'docker cp test-runner:/ui-autotests/target/surefire-reports ./target/surefire-reports || echo "No surefire reports"'
-                        bat 'docker cp test-runner:/ui-autotests/target/allure-results ./target/allure-results || echo "No allure results"'
+                        bat 'docker cp test-runner:/ui-autotests/target/surefire-reports ./target || echo "No surefire reports"'
+                        bat 'docker cp test-runner:/ui-autotests/target/allure-results ./target || echo "No allure results"'
                         archiveArtifacts artifacts: 'test-runner.log', allowEmptyArchive: true
                     }
 
