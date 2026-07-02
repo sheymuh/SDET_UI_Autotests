@@ -21,7 +21,7 @@
         <slf4j-api.version>2.0.17</slf4j-api.version>
         <logback-classic.version>1.5.6</logback-classic.version>
         <webdrivermanager.version>6.1.0</webdrivermanager.version>
-        <suiteXmlFile>src/test/resources/configurations/testng.xml</suiteXmlFile>
+        <suiteXmlFile>src/test/resources/configurations/testng-cross-browser-selenoid.xml</suiteXmlFile>
     </properties>
 
     <dependencies>

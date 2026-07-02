@@ -4,6 +4,7 @@ import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,15 +59,10 @@ public class DriverOptionsFactory {
 
     private static FirefoxOptions createFirefoxOptions() {
         FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("--headless");
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--no-sandbox");
 
-        options.setCapability("marionette", true);
         options.setCapability("acceptInsecureCerts", true);
-
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--ignore-certificate-errors");
 
         options.addPreference("dom.webnotifications.enabled", false);
         options.addPreference("dom.push.enabled", false);
@@ -77,19 +73,13 @@ public class DriverOptionsFactory {
 
     private static EdgeOptions createEdgeOptions() {
         EdgeOptions options = new EdgeOptions();
-        options.addArguments("--headless=new");
         options.addArguments("--window-size=1920,1080");
-
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
 
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--ignore-certificate-errors");
-
         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
         options.addArguments("--disable-blink-features=AutomationControlled");
-        options.addArguments("--remote-allow-origins=*");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
 
@@ -106,5 +96,20 @@ public class DriverOptionsFactory {
         MutableCapabilities options = createOptions(browserType);
         options.setCapability("platformName", "Windows");
         return options;
+    }
+
+    public static DesiredCapabilities createOptionsForSelenoid(BrowserType browserType) {
+        MutableCapabilities browserOptions = createOptions(browserType);
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities(browserOptions);
+
+        Map<String, Object> selenoidOptions = new HashMap<>();
+        selenoidOptions.put("browserName", browserType.toString().toLowerCase());
+        selenoidOptions.put("enableVNC", true);
+        selenoidOptions.put("enableLog", true);
+
+        desiredCapabilities.setCapability("selenoid:options", selenoidOptions);
+        desiredCapabilities.setCapability("platformName", "Linux");
+
+        return desiredCapabilities;
     }
 }

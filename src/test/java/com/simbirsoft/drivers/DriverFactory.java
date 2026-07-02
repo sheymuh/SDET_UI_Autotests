@@ -11,6 +11,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class DriverFactory {
         return switch (mode) {
             case LOCAL -> createLocalDriver(browserType);
             case GRID -> createGridDriver(browserType);
+            case SELENOID -> createSelenoidDriver(browserType);
         };
     }
 
@@ -80,6 +82,23 @@ public class DriverFactory {
             return new RemoteWebDriver(new URL(gridUrl), options);
         } catch (MalformedURLException e) {
             throw new RuntimeException("Некорректный URL Grid: " + gridUrl, e);
+        }
+    }
+
+    /**
+     * Создание WebDriver для запуска через Selenoid в Docker
+     */
+    private static WebDriver createSelenoidDriver(BrowserType browserType) {
+        String selenoidUrl = ParameterProvider.get("selenoid.url");
+        if (selenoidUrl == null || selenoidUrl.isEmpty()) {
+            throw new IllegalArgumentException("Selenoid URL не задан в config.properties");
+        }
+
+        try {
+            DesiredCapabilities options = DriverOptionsFactory.createOptionsForSelenoid(browserType);
+            return new RemoteWebDriver(new URL(selenoidUrl), options);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Некорректный URL Selenoid: " + selenoidUrl, e);
         }
     }
 }

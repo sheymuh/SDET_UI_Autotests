@@ -5,17 +5,9 @@ pipeline {
         allure 'Allure'
     }
     stages {
-        stage('Prepare') {
-            steps {
-                bat '''
-                    mkdir -p test-results
-                    mkdir -p selenoid/logs
-                '''
-            }
-        }
         stage('Start Selenoid') {
             steps {
-                bat 'docker-compose up -d selenoid selenoid-ui'
+                bat 'docker-compose up -d browser-downloader selenoid selenoid-ui'
             }
         }
         stage('Run Tests') {
